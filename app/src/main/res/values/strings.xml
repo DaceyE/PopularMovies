@@ -1,0 +1,37 @@
+<resources>
+    <string name="app_name">Popular Movies</string>
+
+
+    <!-- Toolbar -->
+    <string name="action_settings">Settings</string>
+    <string name="action_fetch_popular">Popular</string>
+    <string name="action_fetch_top_rated">Top rated</string>
+    <string name="title_activity_settings">Settings</string>
+    <!-- END OF Toolbar -->
+
+
+    <!-- fragment_detail -->
+    <string name="uninitialized_title">No Title Found</string>
+    <string name="uninitialized_overview">No Overview Found</string>
+    <string name="uninitialized_date">Unknown Release Date</string>
+    <string name="uninitialized_vote_average">I\'m not being used yet</string>
+    <!-- END OF fragment_detail -->
+
+
+    <!-- Strings related to Settings -->
+    <string name="sortby_title">Movies</string>
+    <string name="sortby_summary">Selects the movies to display</string>
+    <string name="sortby_dialog_title">Display Movies By</string>
+    <string name="sortby_key">sort movies by key</string>
+    <string-array name="entries_sortby_preferences">
+        <item>Popularity</item>
+        <item>Rating</item>
+    </string-array>
+    <string-array name="entryvalues_sortby_preferences">
+        <item>0</item>
+        <item>1</item>
+    </string-array>
+    <!-- END OF Strings related to Settings -->
+
+
+</resources>
