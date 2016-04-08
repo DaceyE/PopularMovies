@@ -88,6 +88,7 @@ public class MainFragment extends Fragment implements AdapterView.OnItemClickLis
     }
 
 
+
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         Log.d(TAG, "onSharedPreferenceChanged");
