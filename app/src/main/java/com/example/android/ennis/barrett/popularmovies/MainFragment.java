@@ -38,13 +38,6 @@ public class MainFragment extends Fragment implements AdapterView.OnItemClickLis
     //}
 
 
-    //TODO move this to the activity
-    @Override
-    public void onResume() {
-        super.onResume();
-        PreferenceManager.getDefaultSharedPreferences(getActivity()).registerOnSharedPreferenceChangeListener(this);
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.v(TAG, "onCreateView started");
@@ -82,13 +75,6 @@ public class MainFragment extends Fragment implements AdapterView.OnItemClickLis
 
 
     @Override
-    public void onPause() {
-        super.onPause();
-        PreferenceManager.getDefaultSharedPreferences(getActivity()).registerOnSharedPreferenceChangeListener(this);
-    }
-
-
-    @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         Log.d(TAG, "onActivityCreated executed");
         super.onActivityCreated(savedInstanceState);
@@ -104,18 +90,6 @@ public class MainFragment extends Fragment implements AdapterView.OnItemClickLis
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-
-        //TODO this Toast can actually crash the app because of fragment lifecycle
-        //TODO rewrite the logic to handle the fragment not being attached to avoid a IllegalStateException
-        //start app
-        //navigate to settings
-        //change preferences
-        //backstack
-        //rotate twice
-        //navigate to settings
-        //change settings
-        //crash from null pointer exception
-        //if (getActivity() != null) Toast.makeText(getActivity(), "onSharedPreferenceChanged", Toast.LENGTH_SHORT).show();
         Log.d(TAG, "onSharedPreferenceChanged");
         if (key.equals(getString(R.string.sortby_key))) {
             String sortBy = sharedPreferences.getString(getString(R.string.sortby_key), "-1");

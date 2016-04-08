@@ -3,12 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.example.android.ennis.barrett.popularmovies.MainActivity">
     <item
-        android:id="@+id/action_fetch_popular"
+        android:id="@+id/action_sort_popular"
         android:orderInCategory="96"
         android:title="@string/action_fetch_popular"
         app:showAsAction="never" />
     <item
-        android:id="@+id/action_fetch_top_rated"
+        android:id="@+id/action_sort_top_rated"
         android:orderInCategory="98"
         android:title="@string/action_fetch_top_rated"
         app:showAsAction="never" />

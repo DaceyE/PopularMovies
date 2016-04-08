@@ -33,5 +33,9 @@
     </string-array>
     <!-- END OF Strings related to Settings -->
 
+    <!-- SyncAdapter related -->
+    <string name="sync_account_type">com.example.android.ennis.barrett.popularmovies.asynchronous.Authenticator</string>
+    <string name="content_authority">com.example.android.ennis.barrett.popularmovies.data</string>
+	<!-- END OF SyncAdapter related -->
 
 </resources>
