@@ -117,6 +117,31 @@ public class TMDbContentProvider extends ContentProvider {
         }
     }
 
+    @Override
+    public int bulkInsert(Uri uri, ContentValues[] values) {
+        SQLiteDatabase database = mCustomSQLiteOpenHelper.getWritableDatabase();
+        int amountInserted = 0;
+        int match = mUriMatcher.match(uri);
+
+        long _id;
+
+        switch (match) {
+            case MOVIES:
+                for (ContentValues content : values) {
+                    Log.d(TAG, "Value inserted: " + values.toString());
+                    _id = database.insert(TMDbContract.Movies.TABLE_NAME, null, content);
+                    if (_id > 0) amountInserted++;
+                }
+                break;
+            case MOVIES_ROW:
+                //break;
+            default:
+                throw new UnsupportedOperationException("Unknown URI: " + uri);
+        }
+
+        if (amountInserted > 0) getContext().getContentResolver().notifyChange(uri, null);
+        return amountInserted;
+    }
 
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
