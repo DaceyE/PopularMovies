@@ -1,5 +1,6 @@
 package com.example.android.ennis.barrett.popularmovies;
 
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -17,7 +18,9 @@ public class DetailActivity extends AppCompatActivity {
         long _id = (long) getIntent().getExtras().get(_ID);
 
         //TODO do this in the manifest using styles/themes
-        getSupportActionBar().hide();
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayShowHomeEnabled(true);
+        actionBar.setIcon(R.mipmap.ic_launcher);
 
 
         DetailFragment detailFragment = (DetailFragment) getSupportFragmentManager().findFragmentById(R.id.detail_fragment);

@@ -42,6 +42,7 @@ public class DetailFragment extends Fragment {
         TextView title = (TextView) mRootView.findViewById(R.id.original_title);
         TextView overview = (TextView) mRootView.findViewById(R.id.overview);
         TextView date = (TextView) mRootView.findViewById(R.id.date);
+        TextView voteAverage2 = (TextView) mRootView.findViewById(R.id.vote_average2);
         ImageView poster = (ImageView) mRootView.findViewById(R.id.poster);
         RatingBar voteAverage = (RatingBar) mRootView.findViewById(R.id.vote_average);
 
@@ -65,7 +66,12 @@ public class DetailFragment extends Fragment {
         Picasso.with(getActivity()).load(posterURLString).into(poster);
 
 
-        float vote = (cursor.getFloat(cursor.getColumnIndex(TMDbContract.Movies.VOTE_AVERAGE))) / 2f;
+
+
+        float vote = cursor.getFloat(cursor.getColumnIndex(TMDbContract.Movies.VOTE_AVERAGE));
+        voteAverage2.setText(vote + " / 10");
+
+        vote /= 2;
         Log.v(TAG, vote + "");
         voteAverage.setRating(vote);
         Log.v(TAG, voteAverage.getRating() + "");
