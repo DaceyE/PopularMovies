@@ -5,7 +5,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <TextView
@@ -23,6 +23,7 @@
             android:textColor="@android:color/white"
             android:translationZ="3dp" />
 
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -33,25 +34,25 @@
                 android:id="@+id/poster"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
+                android:layout_weight="3"
                 android:adjustViewBounds="true"
                 android:scaleType="fitXY"
                 android:src="@android:drawable/ic_menu_report_image" />
 
             <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:paddingLeft="5dp">
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="8"
+                android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/date"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:paddingBottom="10dp"
-                    android:singleLine="false"
+                    android:gravity="center"
+                    android:paddingBottom="2dp"
+                    android:paddingTop="3dp"
+                    android:singleLine="true"
                     android:text="@string/uninitialized_date"
                     android:textColor="@android:color/black"
                     android:textIsSelectable="false"
@@ -59,34 +60,46 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/vote_average2"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/overview"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:singleLine="true"
-                    android:text="\??? / 10.0"
-                    android:textColor="@color/colorAccent"
-                    android:textSize="24sp"
-                    android:textStyle="bold|italic" />
+                    android:padding="8dp"
+                    android:paddingLeft="16dp"
+                    android:singleLine="false"
+                    android:text="@string/uninitialized_overview"
+                    android:textSize="16sp" />
             </LinearLayout>
         </LinearLayout>
 
-        <!-- currently can't get the stepSize working -->
-        <RatingBar
-            android:id="@+id/vote_average"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:isIndicator="true"
-            android:stepSize="0.01" />
-        <!-- TODO add a text view for when there is no vote_average -->
 
-        <TextView
-            android:id="@+id/overview"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="8dp"
-            android:singleLine="false"
-            android:text="@string/uninitialized_overview"
-            android:textSize="16sp" />
+            android:orientation="horizontal"
+            android:paddingLeft="5dp">
+
+            <!-- currently can't get the stepSize working -->
+            <RatingBar
+                android:id="@+id/vote_average"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:isIndicator="true"
+                android:progressTint="@color/colorAccent"
+                android:progressTintMode="screen"
+                android:rating="0"
+                android:stepSize="0.01" />
+            <!-- TODO add a text view for when there is no vote_average -->
+
+            <TextView
+                android:id="@+id/vote_average2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:text="\??? / 10.0"
+                android:textColor="@color/colorAccent"
+                android:textSize="24sp"
+                android:textStyle="bold|italic" />
+        </LinearLayout>
     </LinearLayout>
 
 </ScrollView>
