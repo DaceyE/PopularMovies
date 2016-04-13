@@ -1,3 +1,18 @@
+/*
+ * Copyright (C) 2016 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.example.android.ennis.barrett.popularmovies.data;
 
 import android.content.Context;
@@ -6,7 +21,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 /**
- * Created by Barrett on 3/18/2016.
+ * Manages the database behind the TMDbContentProvider
  */
 public class CustomSQLiteOpenHelper extends SQLiteOpenHelper {
 
@@ -14,15 +29,17 @@ public class CustomSQLiteOpenHelper extends SQLiteOpenHelper {
     public static final int DB_VERSION = 1;
     public static final String DB_NAME = "popular movies db";
 
-
     public CustomSQLiteOpenHelper(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
     }
 
-
-    //TODO fix col properties
+    /**
+     * Called by the system on the creation of the database
+     * @param db
+     */
     @Override
     public void onCreate(SQLiteDatabase db) {
+        //TODO fix col properties
         String createTable = "CREATE TABLE "
                 + TMDbContract.Movies.TABLE_NAME + " ("
                 + TMDbContract.Movies.ID + " integer primary key autoincrement not null, "
@@ -43,8 +60,12 @@ public class CustomSQLiteOpenHelper extends SQLiteOpenHelper {
         db.execSQL(createTable);
     }//onCreate
 
-
-    //TODO add logic to handle database changes
+    /**
+     * Handles upgrading the database, currently deletes the entire database.
+     * @param db
+     * @param oldVersion
+     * @param newVersion
+     */
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         Log.d(TAG, "onUpgrade executed");
@@ -54,4 +75,5 @@ public class CustomSQLiteOpenHelper extends SQLiteOpenHelper {
 
         onCreate(db);
     }
+
 }//end of class

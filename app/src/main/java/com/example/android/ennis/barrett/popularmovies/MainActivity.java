@@ -1,3 +1,18 @@
+/*
+ * Copyright (C) 2016 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.example.android.ennis.barrett.popularmovies;
 
 import android.accounts.Account;
@@ -27,15 +42,18 @@ public class MainActivity extends AppCompatActivity implements MainFragment.List
     private SharedPreferences.OnSharedPreferenceChangeListener SharedPreferenceChangeListener;
 
     public static final String AUTHORITY = "com.example.android.ennis.barrett.popularmovies.data";
-    public static final String ACCOUNT_TYPE = "com.example.android.ennis.barrett.popularmovies.asynchronous.Authenticator";
+    public static final String ACCOUNT_TYPE =
+            "com.example.android.ennis.barrett.popularmovies.asynchronous.Authenticator";
     public static final String ACCOUNT = "mydummyaccount";
 
     @Override
     public void onResume() {
         super.onResume();
         Log.v(TAG, "onResume");
-        SharedPreferenceChangeListener = (MainFragment) getSupportFragmentManager().findFragmentById(R.id.main_fragment);
-        PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(SharedPreferenceChangeListener);
+        SharedPreferenceChangeListener = (MainFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.main_fragment);
+        PreferenceManager.getDefaultSharedPreferences(this)
+                .registerOnSharedPreferenceChangeListener(SharedPreferenceChangeListener);
     }
 
     @Override
@@ -68,7 +86,8 @@ public class MainActivity extends AppCompatActivity implements MainFragment.List
     @Override
     public void onPause() {
         super.onPause();
-        PreferenceManager.getDefaultSharedPreferences(this).unregisterOnSharedPreferenceChangeListener(SharedPreferenceChangeListener);
+        PreferenceManager.getDefaultSharedPreferences(this)
+                .unregisterOnSharedPreferenceChangeListener(SharedPreferenceChangeListener);
     }
 
     @Override
@@ -85,7 +104,8 @@ public class MainActivity extends AppCompatActivity implements MainFragment.List
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        Uri uriTMDb = Uri.parse("content://" + TMDbContentProvider.AUTHORITY + "/" + TMDbContract.Movies.TABLE_NAME);
+        Uri uriTMDb = Uri.parse("content://" + TMDbContentProvider.AUTHORITY + "/"
+                + TMDbContract.Movies.TABLE_NAME);
 
 
         switch (id) {
@@ -94,14 +114,13 @@ public class MainActivity extends AppCompatActivity implements MainFragment.List
                 startActivity(intent);
                 break;
             case R.id.action_sort_popular:
-                PreferenceManager.getDefaultSharedPreferences(this).edit().putString(getString(R.string.sortby_key), "0").apply();
-                //getContentResolver().delete(uriTMDb, TMDbContract.Movies.IS_POPULAR + " = ?", new String[]{"1"});
-                //new FetchTMDb(this).execute(FetchTMDb.MOVIES_POPULAR);
+                PreferenceManager.getDefaultSharedPreferences(this).edit()
+                        .putString(getString(R.string.sortby_key), "0").apply();
+
                 break;
             case R.id.action_sort_top_rated:
-                //getContentResolver().delete(uriTMDb, TMDbContract.Movies.IS_TOP_RATED + " = ?", new String[]{"1"});
-                //new FetchTMDb(this).execute(FetchTMDb.MOVIES_TOP_RATED);
-                PreferenceManager.getDefaultSharedPreferences(this).edit().putString(getString(R.string.sortby_key), "1").apply();
+                PreferenceManager.getDefaultSharedPreferences(this).edit()
+                        .putString(getString(R.string.sortby_key), "1").apply();
                 break;
             default:
                 Log.e(TAG, "Unhandled onOptionsItemSelected case in switch statement");
@@ -120,10 +139,4 @@ public class MainActivity extends AppCompatActivity implements MainFragment.List
         startActivity(intent);
     }
 
-    /*public static Account createSyncAccount(Context context){
-        Account newAccount = new Account(ACCOUNT, ACCOUNT_TYPE);
-
-        AccountManager accountManager = (AccountManager) context.getSystemService(ACCOUNT_SERVICE);
-        if (accountManager.addAccountExplicitly(newAccount,null,null)) Log.d(TAG, "new account created");
-    }*/
 }

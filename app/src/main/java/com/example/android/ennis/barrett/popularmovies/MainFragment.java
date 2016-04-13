@@ -1,3 +1,18 @@
+/*
+ * Copyright (C) 2016 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.example.android.ennis.barrett.popularmovies;
 
 import android.content.SharedPreferences;
@@ -28,15 +43,18 @@ public class MainFragment extends Fragment implements AdapterView.OnItemClickLis
     private GridAdapter mAdapter;
     private static final String LOADER_BUNDLE_KEY = "thebundlekeys";
 
+    /**
+     * A interface for communicating with the activity
+     */
     public interface ListCommunicator {
+
+        /**
+         * gets the id from the slqlite database themovies table of the selected
+         * @param _id the id
+         */
         public void onClicked(long _id);
+
     }
-
-    //TODO read up on fragment's constructors
-    //TODO what is the access for the default [no-args] constructor?
-    //public MainFragment() {
-    //}
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -46,7 +64,8 @@ public class MainFragment extends Fragment implements AdapterView.OnItemClickLis
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
         GridView gridView = (GridView) rootView.findViewById(R.id.gridView);
 
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        SharedPreferences sharedPreferences =
+                PreferenceManager.getDefaultSharedPreferences(getActivity());
         String sortBy = sharedPreferences.getString(getString(R.string.sortby_key), "-1");
         Log.d(TAG, getString(R.string.sortby_key));
         Log.d(TAG, "sortBy value: " + sortBy);
@@ -125,7 +144,8 @@ public class MainFragment extends Fragment implements AdapterView.OnItemClickLis
                     whereArgs = new String[]{"1"};
                 }
 
-                Uri uri = Uri.parse("content://" + TMDbContentProvider.AUTHORITY + "/" + TMDbContract.Movies.TABLE_NAME);
+                Uri uri = Uri.parse("content://" + TMDbContentProvider.AUTHORITY + "/"
+                        + TMDbContract.Movies.TABLE_NAME);
                 Log.v(TAG, "case 0 chosen \n" + uri.toString());
                 return new CursorLoader(getActivity(),
                         uri,

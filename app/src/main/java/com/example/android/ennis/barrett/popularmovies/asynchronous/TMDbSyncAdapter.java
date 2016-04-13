@@ -1,3 +1,18 @@
+/*
+ * Copyright (C) 2016 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.example.android.ennis.barrett.popularmovies.asynchronous;
 
 import android.accounts.Account;
@@ -30,6 +45,10 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+/**
+ * Handle the transfer of data between a server and an
+ * app, using the Android sync adapter framework.
+ */
 public class TMDbSyncAdapter extends AbstractThreadedSyncAdapter {
 
     private static final String TAG = "popularmovies " + TMDbSyncAdapter.class.getSimpleName();
@@ -40,20 +59,33 @@ public class TMDbSyncAdapter extends AbstractThreadedSyncAdapter {
     public static final int SYNC_INTERVAL = 72000;
     public static final int SYNC_FLEXTIME = SYNC_INTERVAL / 3;
 
-    //Placeholder
+    /**
+     * Set up the sync adapter
+     */
     TMDbSyncAdapter(Context context, boolean bool) {
         super(context, bool);
         Log.i(TAG, "Adapter Constructed");
     }
 
+    //TODO implement (Context context, boolean autoInitialize, boolean allowParallelSyncs) to allow compatibility with Android 3.0 (11) and later platform versions
+
+    /*
+    * Calls any data transfer code needed by the app.
+    */
     @Override
-    public void onPerformSync(Account account, Bundle extras, String authority, ContentProviderClient provider, SyncResult syncResult) {
+    public void onPerformSync(Account account, Bundle extras, String authority,
+            ContentProviderClient provider, SyncResult syncResult) {
+
         Log.e(TAG, "onPerformSync");
         fetchMovies(MOVIES_POPULAR);
         fetchMovies(MOVIES_TOP_RATED);
     }
 
-    //TODO use ContentProviderClient instead
+
+    /**
+     * makes the network call to fetch the data and the calls storeJSONMovies
+     * @param type Flag for the try of movie to fetch.
+     */
     private void fetchMovies(int type) {
         HttpURLConnection connection = null;
         BufferedReader reader = null;
@@ -67,8 +99,7 @@ public class TMDbSyncAdapter extends AbstractThreadedSyncAdapter {
         http://api.themoviedb.org/3/movie/top_rated?api_key=xxxxxxx
         http://api.themoviedb.org/3/movie/popular?api_key=xxxxxxxx
         */
-
-        //TODO build Uri programmatically
+        //TODO build Uri programmatically using APIs
         switch (type) {
             case MOVIES_POPULAR:
                 MOVIE_BASE_URL += "/popular" + "?";
@@ -87,11 +118,6 @@ public class TMDbSyncAdapter extends AbstractThreadedSyncAdapter {
                     .appendQueryParameter(API_KEY_PARAM, BuildConfig.TMDb_API_KEY)
                     .build();
 
-
-            //TODO Fine out why these log statments don't work "Log.d(TAG + "doInBackground",....."
-            //Log.d(TAG + "doInBackground", "Well I used the Uri successfully.. I hope");
-            //Log.e(TAG + "doInBackground", droidUri.toString());
-
             Log.v(TAG, "URL used: " + droidUri.toString());
 
             URL url = new URL(droidUri.toString());  //java.net Malformed uri exception
@@ -100,13 +126,11 @@ public class TMDbSyncAdapter extends AbstractThreadedSyncAdapter {
             connection.setRequestMethod("GET"); //java.net.ProtocolException && unnecessary
             connection.connect(); //java.io.IOExecption
 
-
             InputStream inputStream = connection.getInputStream(); // java.io.IOException
             StringBuffer stringBuffer = new StringBuffer();
 
             if (inputStream == null) return;
             reader = new BufferedReader(new InputStreamReader(inputStream));
-
 
             //Make the string more readable
             String line;
@@ -114,16 +138,13 @@ public class TMDbSyncAdapter extends AbstractThreadedSyncAdapter {
                 stringBuffer.append(line + "\n");
             }
 
-
             if (stringBuffer.length() == 0) {
                 Log.e(TAG + "doInBackground", "empty string");
                 return;
             }
 
-
             rawJSON = stringBuffer.toString();
             Log.d(TAG + "doInBackground", rawJSON);
-
 
             switch (type) {
                 case MOVIES_POPULAR:
@@ -133,7 +154,6 @@ public class TMDbSyncAdapter extends AbstractThreadedSyncAdapter {
                     storeJSONMovies(rawJSON.toString(), type);
                     break;
             }
-
 
         } catch (IOException e) {
             Log.e(TAG, "Error ", e);
@@ -157,7 +177,14 @@ public class TMDbSyncAdapter extends AbstractThreadedSyncAdapter {
     }
 
 
+    /**
+     * Parses and stores the JSON data in the TMDbContentProvider
+     * @param dataJSON The JSON data from server
+     * @param type Flag for the try of movie to fetch.  Should match flag used in fetchMovies
+     * @throws JSONException
+     */
     private void storeJSONMovies(String dataJSON, int type) throws JSONException {
+        //TODO use ContentProviderClient instead of ContentResolver
         try {
             JSONObject moviesJSON = new JSONObject(dataJSON);
             JSONArray results = moviesJSON.getJSONArray("results");
@@ -183,15 +210,21 @@ public class TMDbSyncAdapter extends AbstractThreadedSyncAdapter {
             for (int i = 0; i < resultLength; i++) {
                 JSONObject movie = results.getJSONObject(i);
                 contentValues[i] = new ContentValues();
-                contentValues[i].put(TMDbContract.Movies.ORIGINAL_TITLE, movie.getString(TMDbContract.Movies.ORIGINAL_TITLE));
+                contentValues[i].put(TMDbContract.Movies.ORIGINAL_TITLE,
+                        movie.getString(TMDbContract.Movies.ORIGINAL_TITLE));
 
-                //TODO fix the overview by dealing with the ' in the strings
-                contentValues[i].put(TMDbContract.Movies.OVERVIEW, movie.getString(TMDbContract.Movies.OVERVIEW));
-                contentValues[i].put(TMDbContract.Movies.POSTER, movie.getString(TMDbContract.Movies.POSTER));
-                contentValues[i].put(TMDbContract.Movies.RELEASE_DATE, movie.getString(TMDbContract.Movies.RELEASE_DATE));
-                contentValues[i].put(TMDbContract.Movies.POPULARITY, movie.getDouble(TMDbContract.Movies.POPULARITY));
-                contentValues[i].put(TMDbContract.Movies.VOTE_AVERAGE, movie.getDouble(TMDbContract.Movies.VOTE_AVERAGE));
-                contentValues[i].put(TMDbContract.Movies.MOVIE_ID, movie.getInt(TMDbContract.Movies.MOVIE_ID));
+                contentValues[i].put(TMDbContract.Movies.OVERVIEW,
+                        movie.getString(TMDbContract.Movies.OVERVIEW));
+                contentValues[i].put(TMDbContract.Movies.POSTER,
+                        movie.getString(TMDbContract.Movies.POSTER));
+                contentValues[i].put(TMDbContract.Movies.RELEASE_DATE,
+                        movie.getString(TMDbContract.Movies.RELEASE_DATE));
+                contentValues[i].put(TMDbContract.Movies.POPULARITY,
+                        movie.getDouble(TMDbContract.Movies.POPULARITY));
+                contentValues[i].put(TMDbContract.Movies.VOTE_AVERAGE,
+                        movie.getDouble(TMDbContract.Movies.VOTE_AVERAGE));
+                contentValues[i].put(TMDbContract.Movies.MOVIE_ID,
+                        movie.getInt(TMDbContract.Movies.MOVIE_ID));
 
                 //TODO read up on how to have the col initialized to 0 by defualt
                 contentValues[i].put(TMDbContract.Movies.IS_POPULAR, isPopular);
@@ -201,11 +234,13 @@ public class TMDbSyncAdapter extends AbstractThreadedSyncAdapter {
             ContentResolver contentResolver = getContext().getContentResolver();
             //TODO Read Uri APIs
             //TODO declair URI constants in contract
-            Uri uriTMDb = Uri.parse("content://" + TMDbContentProvider.AUTHORITY + "/" + TMDbContract.Movies.TABLE_NAME);
+            Uri uriTMDb = Uri.parse("content://" + TMDbContentProvider.AUTHORITY
+                    + "/" + TMDbContract.Movies.TABLE_NAME);
             int numInserted = contentResolver.bulkInsert(uriTMDb, contentValues);
 
             if (numInserted != resultLength)
-                Log.e(TAG, "Not all of the result were inserted.\n Amount inserted: " + numInserted + "\nAmount from server: " + resultLength);
+                Log.e(TAG, "Not all of the result were inserted.\n Amount inserted: " + numInserted
+                        + "\nAmount from server: " + resultLength);
 
         } catch (JSONException e) {
             Log.d(TAG, e.getMessage(), e);
@@ -250,8 +285,8 @@ public class TMDbSyncAdapter extends AbstractThreadedSyncAdapter {
                 (AccountManager) context.getSystemService(Context.ACCOUNT_SERVICE);
 
         // Create the account type and default account
-        Account newAccount = new Account(
-                context.getString(R.string.app_name), "com.example.android.ennis.barrett.popularmovies.asynchronous.Authenticator");
+        Account newAccount = new Account(context.getString(R.string.app_name),
+                "com.example.android.ennis.barrett.popularmovies.asynchronous.Authenticator");
 
         // If the password doesn't exist, the account doesn't exist
         if (null == accountManager.getPassword(newAccount)) {
@@ -287,7 +322,8 @@ public class TMDbSyncAdapter extends AbstractThreadedSyncAdapter {
         /*
          * Without calling setSyncAutomatically, our periodic sync will not be enabled.
          */
-        ContentResolver.setSyncAutomatically(newAccount, "com.example.android.ennis.barrett.popularmovies.data", true);
+        ContentResolver.setSyncAutomatically(newAccount,
+                "com.example.android.ennis.barrett.popularmovies.data", true);
 
         /*
          * Finally, let's do a sync to get things started
