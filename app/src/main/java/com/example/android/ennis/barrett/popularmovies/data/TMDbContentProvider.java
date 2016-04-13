@@ -18,10 +18,8 @@ package com.example.android.ennis.barrett.popularmovies.data;
 import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.content.UriMatcher;
-import android.database.ContentObserver;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -36,7 +34,7 @@ public class TMDbContentProvider extends ContentProvider {
     //TODO I think this string is in the wrong place. Should be in contract class
     public static String AUTHORITY = "com.example.android.ennis.barrett.popularmovies.data";
     private static final int MOVIES = 5;
-    private static final int MOVIES_ROW = 10;
+    //private static final int MOVIES_ROW = 10;
 
 
     //TODO read up on opinions of using static initialisation block in android.  Also reveiw best practices for them in java
@@ -44,7 +42,7 @@ public class TMDbContentProvider extends ContentProvider {
         //TODO Read up on creating the uri for the *_ROW.  The udacity webcast & other examples don't seem to make sense because they throw out the selection and selectionArgs[] input
         mUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
         mUriMatcher.addURI(AUTHORITY, TMDbContract.Movies.TABLE_NAME, MOVIES);
-        mUriMatcher.addURI(AUTHORITY, TMDbContract.Movies.TABLE_NAME + "/#", MOVIES_ROW);
+        //mUriMatcher.addURI(AUTHORITY, TMDbContract.Movies.TABLE_NAME + "/#", MOVIES_ROW);
     }
 
 
@@ -75,7 +73,7 @@ public class TMDbContentProvider extends ContentProvider {
                         sortOrder);
                 cursor.setNotificationUri(getContext().getContentResolver(), uri);
                 return cursor;
-            case MOVIES_ROW: //Throws exception!
+            /*case MOVIES_ROW: //Throws exception!
                 cursor = mCustomSQLiteOpenHelper.getReadableDatabase().query(
                         TMDbContract.Movies.TABLE_NAME,
                         projection,
@@ -85,7 +83,7 @@ public class TMDbContentProvider extends ContentProvider {
                         null,
                         sortOrder);
 
-                cursor.setNotificationUri(getContext().getContentResolver(), uri);
+                cursor.setNotificationUri(getContext().getContentResolver(), uri);*/
             default:
                 throw new UnsupportedOperationException("Unknown URI: " + uri);
         }
@@ -100,8 +98,8 @@ public class TMDbContentProvider extends ContentProvider {
         switch (match) {
             case MOVIES:
                 break;
-            case MOVIES_ROW:
-                break;
+            /*case MOVIES_ROW:
+                break;*/
             default:
                 throw new UnsupportedOperationException("Unknown URI: " + uri);
         }
@@ -126,8 +124,8 @@ public class TMDbContentProvider extends ContentProvider {
                 } else {
                     throw new android.database.SQLException("Failed to insert row into: " + uri);
                 }
-            case MOVIES_ROW:
-                //break;
+            /*case MOVIES_ROW:
+                //break;*/
             default:
                 throw new UnsupportedOperationException("Unknown URI: " + uri);
         }
@@ -143,14 +141,18 @@ public class TMDbContentProvider extends ContentProvider {
 
         switch (match) {
             case MOVIES:
+                database.beginTransaction();
                 for (ContentValues content : values) {
                     Log.d(TAG, "Value inserted: " + values.toString());
                     _id = database.insert(TMDbContract.Movies.TABLE_NAME, null, content);
                     if (_id > 0) amountInserted++;
                 }
+                database.setTransactionSuccessful();
+                database.endTransaction();
+
                 break;
-            case MOVIES_ROW:
-                //break;
+            /*case MOVIES_ROW:
+                //break;*/
             default:
                 throw new UnsupportedOperationException("Unknown URI: " + uri);
         }
