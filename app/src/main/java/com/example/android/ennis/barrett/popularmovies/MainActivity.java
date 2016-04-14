@@ -78,9 +78,33 @@ public class MainActivity extends AppCompatActivity implements MainFragment.List
         actionBar.setDisplayShowHomeEnabled(true);
         actionBar.setIcon(R.mipmap.ic_launcher);
 
+        Uri uriTMDb = Uri.parse("content://" + TMDbContentProvider.AUTHORITY + "/"
+                + TMDbContract.Movies.TABLE_NAME);
+
 
         TMDbSyncAdapter.initializeSyncAdapter(this);
+
+        //Calls an a manual sync if the provider is empty
+        syncImmediately();
+
         Log.i(TAG, "onCreate finished");
+    }
+
+    /**
+     * Calls for an expedited manual sync whenever the ContentProvider has no Movies flagged as popular.
+     * Cannot be called before TMDbSyncAdapter.initializeSyncAdapter(Context)
+     */
+    private void syncImmediately(){
+        Uri uriTMDb = Uri.parse("content://" + TMDbContentProvider.AUTHORITY + "/"
+                + TMDbContract.Movies.TABLE_NAME);
+
+        int numMovies = getContentResolver().query(uriTMDb,
+                new String[]{TMDbContract.Movies.MOVIE_ID},
+                TMDbContract.Movies.IS_POPULAR + " = ?", new String[]{"1"}, null).getCount();
+
+        if(numMovies <= 0){
+            TMDbSyncAdapter.syncImmediately(this);
+        }
     }
 
     @Override

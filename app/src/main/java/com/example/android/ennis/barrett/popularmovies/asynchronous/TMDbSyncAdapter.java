@@ -324,11 +324,6 @@ public class TMDbSyncAdapter extends AbstractThreadedSyncAdapter {
          */
         ContentResolver.setSyncAutomatically(newAccount,
                 "com.example.android.ennis.barrett.popularmovies.data", true);
-
-        /*
-         * Finally, let's do a sync to get things started
-         */
-        syncImmediately(context);
     }
 
     public static void initializeSyncAdapter(Context context) {
