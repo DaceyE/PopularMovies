@@ -35,7 +35,6 @@ public class TMDbContract {
     public class Movies implements BaseColumns{
         public static final String TABLE_NAME = "themovies";
         public static final String ID = "_id";
-        //TODO ensure I'm using BaseColumns interface correctly...pretty sure I'm not..
 
         //Maps to the movies API JSON names
         public static final String ORIGINAL_TITLE = "original_title";

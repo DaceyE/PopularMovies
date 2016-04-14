@@ -25,7 +25,7 @@ import android.util.Log;
  */
 public class CustomSQLiteOpenHelper extends SQLiteOpenHelper {
 
-    private final String TAG = "dacey_" + getClass();
+    private static final String TAG = "popularmovies " + CustomSQLiteOpenHelper.class.getSimpleName();
     public static final int DB_VERSION = 1;
     public static final String DB_NAME = "popular movies db";
 

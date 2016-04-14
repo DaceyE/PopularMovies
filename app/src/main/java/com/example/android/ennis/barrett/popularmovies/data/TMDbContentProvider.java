@@ -26,7 +26,7 @@ import android.util.Log;
 
 public class TMDbContentProvider extends ContentProvider {
 
-    private static final String TAG = "TMDbContent dacey:";
+    private static final String TAG = "popularmovies " + TMDbContentProvider.class.getSimpleName();
 
     private static UriMatcher mUriMatcher;
     private static CustomSQLiteOpenHelper mCustomSQLiteOpenHelper;

@@ -17,7 +17,6 @@ package com.example.android.ennis.barrett.popularmovies;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,6 +33,7 @@ public class GridAdapter extends BaseAdapter {
 //TODO I should be extending a cursor adapter and not baseAdapter
 
     private static final String TAG = "popularmovies " + GridAdapter.class.getSimpleName();
+
     Cursor mCursor;
     Context mContext;
 
@@ -46,27 +46,22 @@ public class GridAdapter extends BaseAdapter {
         this.mContext = context;
     }
 
-
     @Override
     public int getCount() {
         return mCursor != null ? mCursor.getCount() : 0;
     }
-
 
     @Override
     public Object getItem(int position) {
         return mCursor.moveToPosition(position) ? mCursor : null;
     }
 
-
     @Override
     public long getItemId(int position) {
-        //TODO read up on the implications of the implicit cast taking place here...That's actually not happening anymore, but still read up on it :)
         return mCursor.moveToPosition(position)
                 ? mCursor.getLong(mCursor.getColumnIndex(TMDbContract.Movies._ID))
                 : null;
     }
-
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -79,16 +74,13 @@ public class GridAdapter extends BaseAdapter {
         }
 
         //TODO consider using a uri and additionally relocation the path as opposed the current hardcoding
-        //TODO Create place holder images? Picasso has api to help with that
         ImageView imageView = (ImageView) convertView.findViewById(R.id.poster);
 
         String posterURLString = "http://image.tmdb.org/t/p/w185/" + poster;
-        Log.v(TAG, posterURLString);
         Picasso.with(mContext).load(posterURLString).into(imageView);
 
         return convertView;
     }
-
 
     public void changeCursor(Cursor newCursor) {
         if (newCursor == mCursor) return;

@@ -64,7 +64,7 @@ public class TMDbSyncAdapter extends AbstractThreadedSyncAdapter {
      */
     TMDbSyncAdapter(Context context, boolean bool) {
         super(context, bool);
-        Log.i(TAG, "Adapter Constructed");
+        Log.v(TAG, "Adapter Constructed");
     }
 
     //TODO implement (Context context, boolean autoInitialize, boolean allowParallelSyncs) to allow compatibility with Android 3.0 (11) and later platform versions
@@ -76,7 +76,7 @@ public class TMDbSyncAdapter extends AbstractThreadedSyncAdapter {
     public void onPerformSync(Account account, Bundle extras, String authority,
             ContentProviderClient provider, SyncResult syncResult) {
 
-        Log.e(TAG, "onPerformSync");
+        Log.i(TAG, "onPerformSync");
         fetchMovies(MOVIES_POPULAR);
         fetchMovies(MOVIES_TOP_RATED);
     }
@@ -253,7 +253,7 @@ public class TMDbSyncAdapter extends AbstractThreadedSyncAdapter {
      * Helper method to schedule the sync adapter periodic execution
      */
     public static void configurePeriodicSync(Context context, int syncInterval, int flexTime) {
-        Log.i(TAG, "configurePeriodicSync");
+        Log.v(TAG, "configurePeriodicSync");
         Account account = getSyncAccount(context);
         String authority = "com.example.android.ennis.barrett.popularmovies.data";
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
@@ -279,7 +279,7 @@ public class TMDbSyncAdapter extends AbstractThreadedSyncAdapter {
     }
 
     public static Account getSyncAccount(Context context) {
-        Log.i(TAG, "getSyncAccount");
+        Log.v(TAG, "getSyncAccount");
         // Get an instance of the Android account manager
         AccountManager accountManager =
                 (AccountManager) context.getSystemService(Context.ACCOUNT_SERVICE);
@@ -290,38 +290,24 @@ public class TMDbSyncAdapter extends AbstractThreadedSyncAdapter {
 
         // If the password doesn't exist, the account doesn't exist
         if (null == accountManager.getPassword(newAccount)) {
-            Log.i(TAG, "getSyncAccount if");
         /*
          * Add the account and account type, no password or user data
          * If successful, return the Account object, otherwise report an error.
          */
             if (!accountManager.addAccountExplicitly(newAccount, "", null)) {
-                Log.i(TAG, "addAccountExplicitly");
+                Log.v(TAG, "addAccountExplicitly");
                 return null;
             }
-            /*
-             * If you don't set android:syncable="true" in
-             * in your <provider> element in the manifest,
-             * then call ContentResolver.setIsSyncable(account, AUTHORITY, 1)
-             * here.
-             */
-
             onAccountCreated(newAccount, context);
         }
-        Log.i(TAG, "getSyncAccount after if");
         return newAccount;
     }
 
     private static void onAccountCreated(Account newAccount, Context context) {
         Log.i(TAG, "onAccountCreated");
-        /*
-         * Since we've created an account
-         */
+
         TMDbSyncAdapter.configurePeriodicSync(context, SYNC_INTERVAL, SYNC_FLEXTIME);
 
-        /*
-         * Without calling setSyncAutomatically, our periodic sync will not be enabled.
-         */
         ContentResolver.setSyncAutomatically(newAccount,
                 "com.example.android.ennis.barrett.popularmovies.data", true);
     }
