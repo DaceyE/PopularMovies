@@ -76,7 +76,7 @@ public class TMDbSyncAdapter extends AbstractThreadedSyncAdapter {
     */
     @Override
     public void onPerformSync(Account account, Bundle extras, String authority,
-            ContentProviderClient provider, SyncResult syncResult) {
+                              ContentProviderClient provider, SyncResult syncResult) {
 
         Log.i(TAG, "onPerformSync");
         int[] ids = fetchMovies(MOVIES_POPULAR);
@@ -341,7 +341,7 @@ public class TMDbSyncAdapter extends AbstractThreadedSyncAdapter {
             Log.e(TAG, "Error ", e);
             // If the code didn't successfully get the weather data, there's no point in attempting
             // to parse it.
-        //} catch (JSONException e) {
+            //} catch (JSONException e) {
             //Log.e(TAG, e.getMessage(), e);
             //e.printStackTrace();
         } finally {
@@ -437,9 +437,9 @@ public class TMDbSyncAdapter extends AbstractThreadedSyncAdapter {
                     value.put(TMDbContract.Reviews.AUTHOR,
                             movie.getString(TMDbContract.Reviews.AUTHOR));
                     value.put(TMDbContract.Reviews.REVIEW_CONTENT,
+                            movie.getString(TMDbContract.Reviews.REVIEW_CONTENT));
+                    value.put(TMDbContract.Reviews.REVIEW_ID,
                             movie.getString(TMDbContract.Reviews.REVIEW_ID));
-                    value.put(TMDbContract.Videos.VIDEO_ID,
-                            movie.getString(TMDbContract.Videos.VIDEO_ID));
                     value.put(TMDbContract.Reviews.MOVIE_IDS, movieId);
                     contentValuesArrayList.add(value);
                 }
