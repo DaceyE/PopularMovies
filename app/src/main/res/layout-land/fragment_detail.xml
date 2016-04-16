@@ -68,6 +68,14 @@
                     android:singleLine="false"
                     android:text="@string/uninitialized_overview"
                     android:textSize="16sp" />
+
+                <CheckBox
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Favorite"
+                    android:id="@+id/favorite"
+                    android:layout_gravity="center_horizontal"
+                    android:checked="false" />
             </LinearLayout>
         </LinearLayout>
 
@@ -98,6 +106,36 @@
                 android:textSize="24sp"
                 android:textStyle="bold|italic" />
         </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/videos">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Videos"
+                android:id="@+id/textView" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/reviews">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Reviews"
+                android:id="@+id/textView2"
+                android:focusable="false" />
+        </LinearLayout>
+
     </LinearLayout>
 
 </ScrollView>

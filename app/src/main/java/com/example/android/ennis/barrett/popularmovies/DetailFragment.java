@@ -1,5 +1,6 @@
 package com.example.android.ennis.barrett.popularmovies;
 
+import android.content.ContentResolver;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
@@ -52,21 +54,37 @@ public class DetailFragment extends Fragment {
         setDetails(mID);
     }
 
+    /**
+     * Sets all the views to related id.
+     * @param _id The id of the movie
+     */
     private void setDetails(long _id) {
+        /*
+         * get references
+         */
         TextView title = (TextView) mRootView.findViewById(R.id.original_title);
         TextView overview = (TextView) mRootView.findViewById(R.id.overview);
         TextView date = (TextView) mRootView.findViewById(R.id.date);
         TextView voteAverage2 = (TextView) mRootView.findViewById(R.id.vote_average2);
         ImageView poster = (ImageView) mRootView.findViewById(R.id.poster);
         RatingBar voteAverage = (RatingBar) mRootView.findViewById(R.id.vote_average);
+        LinearLayout videos = (LinearLayout) mRootView.findViewById(R.id.videos);
+        LinearLayout reviews = (LinearLayout) mRootView.findViewById(R.id.reviews);
 
+        ContentResolver contentResolver = getActivity().getContentResolver();
+
+        /*
+         * Queries the movies table
+         */
         Uri uriTMDb = Uri.parse("content://" + TMDbContentProvider.AUTHORITY + "/"
                 + TMDbContract.Movies.TABLE_NAME);
-        Cursor cursor = getActivity().getContentResolver()
-                .query(uriTMDb, null, TMDbContract.Movies.ID + " = ?", new String[]{mID + ""}, null);
-
+        Cursor cursor = contentResolver.query
+                (uriTMDb, null, TMDbContract.Movies.ID + " = ?", new String[]{mID + ""}, null);
         cursor.moveToFirst();
 
+        /*
+         * sets most views to the movie
+         */
         title.setText(cursor.getString(
                 cursor.getColumnIndex(TMDbContract.Movies.ORIGINAL_TITLE)));
 
@@ -76,21 +94,61 @@ public class DetailFragment extends Fragment {
         date.setText(cursor.getString(
                 cursor.getColumnIndex(TMDbContract.Movies.RELEASE_DATE)));
 
+        // Setups up the poster
         String posterURLString = "http://image.tmdb.org/t/p/w185/"
                 + cursor.getString(cursor.getColumnIndex(TMDbContract.Movies.POSTER));
-        Log.v("dacey", posterURLString);
+        Log.v(TAG, posterURLString);
         Picasso.with(getActivity()).load(posterURLString).into(poster);
 
-
-
-
+        //Set up the RatingBar and the TextView with the rating
         float vote = cursor.getFloat(cursor.getColumnIndex(TMDbContract.Movies.VOTE_AVERAGE));
         voteAverage2.setText(vote + " / 10");
-
         vote /= 2;
         Log.v(TAG, vote + "");
         voteAverage.setRating(vote);
         Log.v(TAG, voteAverage.getRating() + "");
+
+        /*
+         * Set up the videos LinearLayout.
+         * Queries the table and then creates TextViews to display the results
+         */
+        uriTMDb = Uri.parse("content://" + TMDbContentProvider.AUTHORITY + "/"
+                + TMDbContract.Videos.TABLE_NAME);
+
+        Cursor cursorVideos = contentResolver.query(uriTMDb, new String[]{TMDbContract.Videos.NAME},
+                TMDbContract.Videos.MOVIE_IDS + " = ?",
+                new String[]{cursor.getString(cursor.getColumnIndex(TMDbContract.Movies.MOVIE_ID))},
+                null);
+
+        //loop to create TextViews to display the results
+        while(cursorVideos.moveToNext()){
+            TextView textView = new TextView(getActivity());
+            textView.setText(cursorVideos.getString(cursorVideos
+                    .getColumnIndex(TMDbContract.Videos.NAME)));
+            videos.addView(textView);
+        }
+
+
+        /*
+         * Set up the reviews LinearLayout.
+         * Queries the table and then creates TextViews to display the results
+         */
+        uriTMDb = Uri.parse("content://" + TMDbContentProvider.AUTHORITY + "/"
+                + TMDbContract.Reviews.TABLE_NAME);
+
+        Cursor cursorReviews= contentResolver.query(uriTMDb, new String[]{TMDbContract.Reviews.AUTHOR},
+                TMDbContract.Reviews.MOVIE_IDS + " = ?",
+                new String[]{cursor.getString(cursor.getColumnIndex(TMDbContract.Movies.MOVIE_ID))},
+                null);
+
+        //loop to create TextViews to display the results
+        while(cursorReviews.moveToNext()){
+            TextView textView = new TextView(getActivity());
+            textView.setText(cursorReviews.getString(cursorReviews
+                    .getColumnIndex(TMDbContract.Reviews.AUTHOR)));
+            reviews.addView(textView);
+        }
+
     }
 
 }// end of class

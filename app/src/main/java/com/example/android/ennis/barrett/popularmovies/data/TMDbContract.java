@@ -50,4 +50,39 @@ public class TMDbContract {
         public static final String IS_FAVORITE = "isfavorite";
     }
 
+    /**
+     * contract class specifically for thevideos table
+     */
+    public class Videos implements BaseColumns{
+        public static final String TABLE_NAME = "thevideos";
+
+        //Most col map to the TMDb JSON object. MOVIE_IDS does not due to a collision
+        public static final String ID = "_id";
+        public static final String NAME = "name";
+        public static final String KEY = "key";
+        public static final String TYPE = "type";
+        public static final String VIDEO_ID = "id";
+        //TODO make COL_MOVIE_ID a foreign key
+        public static final String MOVIE_IDS = "ids";
+
+        public static final int VIDEO_TYPE_TRAILER = 0;
+        public static final int VIDEO_TYPE_TEASER = 1;
+        public static final int VIDEO_TYPE_OTHER = 2;
+    }
+
+    /**
+     * contract class specifically for themreviews table
+     */
+    public class Reviews implements BaseColumns{
+        public static final String TABLE_NAME = "thereviews";
+
+        //Most col map to the TMDb JSON object. MOVIE_IDS does not due to a collision
+        public static final String ID = "_id";
+        public static final String AUTHOR = "author";
+        public static final String REVIEW_CONTENT = "content";
+        public static final String REVIEW_ID = "id";
+        //TODO make COL_MOVIE_ID a foreign key
+        public static final String MOVIE_IDS = "ids";
+    }
+
 }

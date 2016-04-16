@@ -26,6 +26,7 @@ import android.util.Log;
 public class CustomSQLiteOpenHelper extends SQLiteOpenHelper {
 
     private static final String TAG = "popularmovies " + CustomSQLiteOpenHelper.class.getSimpleName();
+
     public static final int DB_VERSION = 1;
     public static final String DB_NAME = "popular movies db";
 
@@ -54,9 +55,30 @@ public class CustomSQLiteOpenHelper extends SQLiteOpenHelper {
                 + TMDbContract.Movies.IS_FAVORITE + " integer, " // not null
                 + TMDbContract.Movies.MOVIE_ID + " integer " // not null, foreign key?
                 + ");";
-
-
         Log.d(TAG, createTable);
+        db.execSQL(createTable);
+
+        createTable = "CREATE TABLE "
+                + TMDbContract.Videos.TABLE_NAME + " ("
+                + TMDbContract.Videos.ID + " integer primary key autoincrement not null, "
+                + TMDbContract.Videos.NAME + " text, "
+                + TMDbContract.Videos.KEY + " text, "
+                + TMDbContract.Videos.TYPE + " integer, "
+                + TMDbContract.Videos.VIDEO_ID + " text, " // not null, foreign key
+                + TMDbContract.Videos.MOVIE_IDS + " integer " // not null, foreign key
+                + ");";
+        Log.i(TAG, createTable);
+        db.execSQL(createTable);
+
+        createTable = "CREATE TABLE "
+                + TMDbContract.Reviews.TABLE_NAME + " ("
+                + TMDbContract.Reviews.ID + " integer primary key autoincrement not null, "
+                + TMDbContract.Reviews.AUTHOR + " text, "
+                + TMDbContract.Reviews.REVIEW_CONTENT + " text, "
+                + TMDbContract.Reviews.REVIEW_ID + " text, " // not null, foreign key
+                + TMDbContract.Reviews.MOVIE_IDS + " integer " // not null, foreign key
+                + ");";
+        Log.i(TAG, createTable);
         db.execSQL(createTable);
     }//onCreate
 
@@ -68,9 +90,11 @@ public class CustomSQLiteOpenHelper extends SQLiteOpenHelper {
      */
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        Log.d(TAG, "onUpgrade executed");
+        Log.i(TAG, "onUpgrade executed");
 
         db.execSQL("DROP TABLE IF EXISTS " + TMDbContract.Movies.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + TMDbContract.Videos.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + TMDbContract.Reviews.TABLE_NAME);
         Log.i(TAG, "TABLES DROPPED");
 
         onCreate(db);

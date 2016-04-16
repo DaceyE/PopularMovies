@@ -34,7 +34,8 @@ public class TMDbContentProvider extends ContentProvider {
     //TODO I think this string is in the wrong place. Should be in contract class
     public static String AUTHORITY = "com.example.android.ennis.barrett.popularmovies.data";
     private static final int MOVIES = 5;
-    //private static final int MOVIES_ROW = 10;
+    private static final int VIDEOS = 15;
+    private static final int REVIEWS = 25;
 
 
     //TODO read up on opinions of using static initialisation block in android.  Also reveiw best practices for them in java
@@ -42,7 +43,8 @@ public class TMDbContentProvider extends ContentProvider {
         //TODO Read up on creating the uri for the *_ROW.  The udacity webcast & other examples don't seem to make sense because they throw out the selection and selectionArgs[] input
         mUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
         mUriMatcher.addURI(AUTHORITY, TMDbContract.Movies.TABLE_NAME, MOVIES);
-        //mUriMatcher.addURI(AUTHORITY, TMDbContract.Movies.TABLE_NAME + "/#", MOVIES_ROW);
+        mUriMatcher.addURI(AUTHORITY, TMDbContract.Videos.TABLE_NAME, VIDEOS);
+        mUriMatcher.addURI(AUTHORITY, TMDbContract.Reviews.TABLE_NAME, REVIEWS);
     }
 
 
@@ -72,23 +74,35 @@ public class TMDbContentProvider extends ContentProvider {
                         null,
                         sortOrder);
                 cursor.setNotificationUri(getContext().getContentResolver(), uri);
-                return cursor;
-            /*case MOVIES_ROW: //Throws exception!
+                break;
+            case VIDEOS:
                 cursor = mCustomSQLiteOpenHelper.getReadableDatabase().query(
-                        TMDbContract.Movies.TABLE_NAME,
+                        TMDbContract.Videos.TABLE_NAME,
                         projection,
-                        "",
+                        selection,
                         selectionArgs,
                         null,
                         null,
                         sortOrder);
-
-                cursor.setNotificationUri(getContext().getContentResolver(), uri);*/
+                cursor.setNotificationUri(getContext().getContentResolver(), uri);
+                break;
+            case REVIEWS:
+                cursor = mCustomSQLiteOpenHelper.getReadableDatabase().query(
+                        TMDbContract.Reviews.TABLE_NAME,
+                        projection,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder);
+                cursor.setNotificationUri(getContext().getContentResolver(), uri);
+                break;
             default:
                 throw new UnsupportedOperationException("Unknown URI: " + uri);
         }
-    }
 
+        return cursor;
+    }
 
     //TODO Implement getType
     @Nullable
@@ -98,8 +112,10 @@ public class TMDbContentProvider extends ContentProvider {
         switch (match) {
             case MOVIES:
                 break;
-            /*case MOVIES_ROW:
-                break;*/
+            case VIDEOS:
+                break;
+            case REVIEWS:
+                break;
             default:
                 throw new UnsupportedOperationException("Unknown URI: " + uri);
         }
@@ -124,13 +140,33 @@ public class TMDbContentProvider extends ContentProvider {
                 } else {
                     throw new android.database.SQLException("Failed to insert row into: " + uri);
                 }
-            /*case MOVIES_ROW:
-                //break;*/
+            case VIDEOS:
+                _id = database.insert(TMDbContract.Videos.TABLE_NAME, null, values);
+                if (_id > 0) {
+                    getContext().getContentResolver().notifyChange(uri, null);
+                    return TMDbContract.buildURI(uri, _id);
+                } else {
+                    throw new android.database.SQLException("Failed to insert row into: " + uri);
+                }
+            case REVIEWS:
+                _id = database.insert(TMDbContract.Reviews.TABLE_NAME, null, values);
+                if (_id > 0) {
+                    getContext().getContentResolver().notifyChange(uri, null);
+                    return TMDbContract.buildURI(uri, _id);
+                } else {
+                    throw new android.database.SQLException("Failed to insert row into: " + uri);
+                }
             default:
                 throw new UnsupportedOperationException("Unknown URI: " + uri);
         }
     }
 
+    /**
+     * A more efficient way to insert large amounts of data into the provider.
+     * @param uri
+     * @param values The ContentValues to insert
+     * @return The number of successfully inserted rows
+     */
     @Override
     public int bulkInsert(Uri uri, ContentValues[] values) {
         SQLiteDatabase database = mCustomSQLiteOpenHelper.getWritableDatabase();
@@ -149,11 +185,29 @@ public class TMDbContentProvider extends ContentProvider {
                 }
                 database.setTransactionSuccessful();
                 database.endTransaction();
-
                 break;
-            /*case MOVIES_ROW:
-                //break;*/
+            case VIDEOS:
+                database.beginTransaction();
+                for (ContentValues content : values) {
+                    Log.d(TAG, "Value inserted: " + values.toString());
+                    _id = database.insert(TMDbContract.Videos.TABLE_NAME, null, content);
+                    if (_id > 0) amountInserted++;
+                }
+                database.setTransactionSuccessful();
+                database.endTransaction();
+                break;
+            case REVIEWS:
+                database.beginTransaction();
+                for (ContentValues content : values) {
+                    Log.d(TAG, "Value inserted: " + values.toString());
+                    _id = database.insert(TMDbContract.Reviews.TABLE_NAME, null, content);
+                    if (_id > 0) amountInserted++;
+                }
+                database.setTransactionSuccessful();
+                database.endTransaction();
+                break;
             default:
+                //TODO consider calling super instead.  This would let the method be usable even if I haven't overiden it for all URIs
                 throw new UnsupportedOperationException("Unknown URI: " + uri);
         }
 
@@ -169,6 +223,10 @@ public class TMDbContentProvider extends ContentProvider {
         switch (match) {
             case MOVIES:
                 return database.delete(TMDbContract.Movies.TABLE_NAME, selection, selectionArgs);
+            case VIDEOS:
+                return database.delete(TMDbContract.Videos.TABLE_NAME, selection, selectionArgs);
+            case REVIEWS:
+                return database.delete(TMDbContract.Reviews.TABLE_NAME, selection, selectionArgs);
             default:
                 throw new UnsupportedOperationException("Unknown URI: " + uri);
         }
@@ -182,6 +240,12 @@ public class TMDbContentProvider extends ContentProvider {
         switch (match) {
             case MOVIES:
                 return database.update(TMDbContract.Movies.TABLE_NAME, values, selection,
+                        selectionArgs);
+            case VIDEOS:
+                return database.update(TMDbContract.Videos.TABLE_NAME, values, selection,
+                        selectionArgs);
+            case REVIEWS:
+                return database.update(TMDbContract.Reviews.TABLE_NAME, values, selection,
                         selectionArgs);
             default:
                 throw new UnsupportedOperationException("Unknown URI: " + uri);
