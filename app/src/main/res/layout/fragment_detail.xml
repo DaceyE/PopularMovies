@@ -96,34 +96,43 @@
             android:text="@string/uninitialized_overview"
             android:textSize="16sp" />
 
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/videos">
+        <HorizontalScrollView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/horizontalScrollView"
+            android:longClickable="false"
+            android:focusableInTouchMode="false">
 
-            <TextView
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/videos"
+                android:focusable="false"
+                android:padding="5dp">
+
+            </LinearLayout>
+        </HorizontalScrollView>
+
+
+            <LinearLayout
+                android:orientation="vertical"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="Videos"
-                android:id="@+id/textView" />
-        </LinearLayout>
+                android:layout_height="match_parent"
+                android:id="@+id/reviews"
+                android:layout_margin="5dp">
 
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/reviews">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="Reviews"
+                    android:focusable="false"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="24sp"
+                    android:id="@+id/reviews_header" />
+            </LinearLayout>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="Reviews"
-                android:id="@+id/textView2"
-                android:focusable="false" />
-        </LinearLayout>
 
 
     </LinearLayout>

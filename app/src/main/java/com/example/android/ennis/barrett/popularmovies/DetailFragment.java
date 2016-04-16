@@ -102,7 +102,7 @@ public class DetailFragment extends Fragment {
 
         //Set up the RatingBar and the TextView with the rating
         float vote = cursor.getFloat(cursor.getColumnIndex(TMDbContract.Movies.VOTE_AVERAGE));
-        voteAverage2.setText(vote + " / 10");
+        voteAverage2.setText(vote + " / 10 ");
         vote /= 2;
         Log.v(TAG, vote + "");
         voteAverage.setRating(vote);
@@ -115,17 +115,27 @@ public class DetailFragment extends Fragment {
         uriTMDb = Uri.parse("content://" + TMDbContentProvider.AUTHORITY + "/"
                 + TMDbContract.Videos.TABLE_NAME);
 
-        Cursor cursorVideos = contentResolver.query(uriTMDb, new String[]{TMDbContract.Videos.NAME},
+        /*Cursor cursorVideos = contentResolver.query(uriTMDb, new String[]{TMDbContract.Videos.NAME},
+                TMDbContract.Videos.MOVIE_IDS + " = ?",
+                new String[]{cursor.getString(cursor.getColumnIndex(TMDbContract.Movies.MOVIE_ID))},
+                null);*/
+        Cursor cursorVideos = contentResolver.query(uriTMDb, null,
                 TMDbContract.Videos.MOVIE_IDS + " = ?",
                 new String[]{cursor.getString(cursor.getColumnIndex(TMDbContract.Movies.MOVIE_ID))},
                 null);
+        VideoCursorAdapter adapter = new VideoCursorAdapter(getActivity(),R.layout.video_card,cursorVideos);
 
         //loop to create TextViews to display the results
-        while(cursorVideos.moveToNext()){
+        /*while(cursorVideos.moveToNext()){
+            View view = adapter.getView();
             TextView textView = new TextView(getActivity());
             textView.setText(cursorVideos.getString(cursorVideos
                     .getColumnIndex(TMDbContract.Videos.NAME)));
             videos.addView(textView);
+        }*/
+        for (int i = 0; i < adapter.getCount(); i++){
+            View view = adapter.getView(i,null,null);
+            videos.addView(view);
         }
 
 
@@ -136,7 +146,22 @@ public class DetailFragment extends Fragment {
         uriTMDb = Uri.parse("content://" + TMDbContentProvider.AUTHORITY + "/"
                 + TMDbContract.Reviews.TABLE_NAME);
 
-        Cursor cursorReviews= contentResolver.query(uriTMDb, new String[]{TMDbContract.Reviews.AUTHOR},
+        Cursor cursorReviews = contentResolver.query(uriTMDb, null,
+                TMDbContract.Reviews.MOVIE_IDS + " = ?",
+                new String[]{cursor.getString(cursor.getColumnIndex(TMDbContract.Movies.MOVIE_ID))},
+                null);
+
+        if (cursorReviews.getCount() == 0) {
+            mRootView.findViewById(R.id.reviews_header).setVisibility(View.GONE);
+        } else {
+            ReviewCursorAdapter adapter2 = new ReviewCursorAdapter(getActivity(),R.layout.review_card,cursorReviews);
+            for (int i = 0; i < adapter2.getCount(); i++) {
+                View view = adapter2.getView(i, null, null);
+                reviews.addView(view);
+            }
+        }
+
+        /*Cursor cursorReviews= contentResolver.query(uriTMDb, new String[]{TMDbContract.Reviews.AUTHOR},
                 TMDbContract.Reviews.MOVIE_IDS + " = ?",
                 new String[]{cursor.getString(cursor.getColumnIndex(TMDbContract.Movies.MOVIE_ID))},
                 null);
@@ -147,7 +172,7 @@ public class DetailFragment extends Fragment {
             textView.setText(cursorReviews.getString(cursorReviews
                     .getColumnIndex(TMDbContract.Reviews.AUTHOR)));
             reviews.addView(textView);
-        }
+        }*/
 
     }
 
