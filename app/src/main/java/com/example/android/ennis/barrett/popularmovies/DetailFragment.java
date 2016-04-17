@@ -1,6 +1,8 @@
 package com.example.android.ennis.barrett.popularmovies;
 
+import android.content.ActivityNotFoundException;
 import android.content.ContentResolver;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -13,6 +15,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
+
 
 import com.example.android.ennis.barrett.popularmovies.data.TMDbContentProvider;
 import com.example.android.ennis.barrett.popularmovies.data.TMDbContract;
@@ -34,7 +38,7 @@ import com.squareup.picasso.Picasso;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-public class DetailFragment extends Fragment {
+public class DetailFragment extends Fragment implements View.OnClickListener {
 
     private static final String TAG = "popularmovies " + DetailFragment.class.getSimpleName();
 
@@ -135,6 +139,7 @@ public class DetailFragment extends Fragment {
         }*/
         for (int i = 0; i < adapter.getCount(); i++){
             View view = adapter.getView(i,null,null);
+            view.setOnClickListener(this);
             videos.addView(view);
         }
 
@@ -176,4 +181,23 @@ public class DetailFragment extends Fragment {
 
     }
 
+    /**
+     * Called when a view has been clicked.
+     *
+     * @param v The view that was clicked.
+     */
+    @Override
+    public void onClick(View v) {
+        String key = (String) v.getTag();
+        Toast.makeText(getActivity(), key, Toast.LENGTH_SHORT).show();
+        //TODO use youtube APIs instead.
+        Intent intent;
+        try {
+            intent = new Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube:" + key));
+            startActivity(intent);
+        } catch (ActivityNotFoundException e) {
+            intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.youtube.com/watch?v=" + key));
+            startActivity(intent);
+        }
+    }
 }// end of class

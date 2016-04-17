@@ -38,5 +38,8 @@ public class VideoCursorAdapter extends ResourceCursorAdapter {
         String url = "http://img.youtube.com/vi/" + key + "/0.jpg";
 
         Picasso.with(context).load(url).into(imageView);
+
+        //Associates the youtube key with each view
+        view.setTag(key);
     }
 }
