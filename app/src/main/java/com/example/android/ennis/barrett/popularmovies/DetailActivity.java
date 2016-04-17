@@ -15,9 +15,18 @@
  */
 package com.example.android.ennis.barrett.popularmovies;
 
+import android.content.ContentValues;
+import android.net.Uri;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.Toast;
+
+import com.example.android.ennis.barrett.popularmovies.data.TMDbContentProvider;
+import com.example.android.ennis.barrett.popularmovies.data.TMDbContract;
 
 public class DetailActivity extends AppCompatActivity {
 
@@ -26,12 +35,14 @@ public class DetailActivity extends AppCompatActivity {
     //TODO programmatically define name
     public static final String _ID =
             "com.example.android.ennis.barrett.popularmovies.DetailActivity._ID";
+    private long id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
         long _id = (long) getIntent().getExtras().get(_ID);
+        id = _id;
 
         //TODO do this in the manifest using styles/themes
         ActionBar actionBar = getSupportActionBar();
@@ -43,4 +54,19 @@ public class DetailActivity extends AppCompatActivity {
                 .findFragmentById(R.id.detail_fragment);
         detailFragment.setID(_id);
     }
+
+    public void onCheck(View v){
+        Uri uriTMDb = Uri.parse("content://" + TMDbContentProvider.AUTHORITY + "/"
+                + TMDbContract.Movies.TABLE_NAME);
+        ContentValues value = new ContentValues();
+        String isFavorite = "0";
+        if (((CompoundButton) v).isChecked()){
+            isFavorite = "1";
+        }
+
+        value.put(TMDbContract.Movies.IS_FAVORITE, isFavorite);
+        int num = getContentResolver().update(uriTMDb, value, TMDbContract.Movies._ID + " = ?",
+                new String[]{Long.toString(id)});
+    }
+
 }

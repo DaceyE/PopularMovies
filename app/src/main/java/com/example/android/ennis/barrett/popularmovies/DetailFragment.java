@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
@@ -74,6 +75,7 @@ public class DetailFragment extends Fragment implements View.OnClickListener {
         RatingBar voteAverage = (RatingBar) mRootView.findViewById(R.id.vote_average);
         LinearLayout videos = (LinearLayout) mRootView.findViewById(R.id.videos);
         LinearLayout reviews = (LinearLayout) mRootView.findViewById(R.id.reviews);
+        CompoundButton isFavorite = (CompoundButton) mRootView.findViewById(R.id.favorite);
 
         ContentResolver contentResolver = getActivity().getContentResolver();
 
@@ -103,6 +105,15 @@ public class DetailFragment extends Fragment implements View.OnClickListener {
                 + cursor.getString(cursor.getColumnIndex(TMDbContract.Movies.POSTER));
         Log.v(TAG, posterURLString);
         Picasso.with(getActivity()).load(posterURLString).into(poster);
+
+        String bool = cursor.getString(cursor.getColumnIndex(TMDbContract.Movies.IS_FAVORITE));
+
+        //short circuit logic stops app from crashing..So don't reverse the expression
+        if(bool != null && bool.equals("1")) {
+            isFavorite.setChecked(true);
+        } else {
+            isFavorite.setChecked(false);
+        }
 
         //Set up the RatingBar and the TextView with the rating
         float vote = cursor.getFloat(cursor.getColumnIndex(TMDbContract.Movies.VOTE_AVERAGE));

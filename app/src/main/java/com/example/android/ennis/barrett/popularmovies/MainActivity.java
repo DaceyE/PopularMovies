@@ -105,6 +105,11 @@ public class MainActivity extends AppCompatActivity implements MainFragment.List
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
+
+        //For action_sort cases
+        String[] prefValues;
+        String value;
+
         int id = item.getItemId();
         switch (id) {
             case R.id.action_settings:
@@ -112,12 +117,25 @@ public class MainActivity extends AppCompatActivity implements MainFragment.List
                 startActivity(intent);
                 break;
             case R.id.action_sort_popular:
+                prefValues = getResources()
+                        .getStringArray(R.array.entryvalues_sortby_preferences);
+                value = prefValues[0];
                 PreferenceManager.getDefaultSharedPreferences(this).edit()
-                        .putString(getString(R.string.sortby_key), "0").apply();
+                        .putString(getString(R.string.sortby_key), value).apply();
                 break;
             case R.id.action_sort_top_rated:
+                prefValues = getResources()
+                        .getStringArray(R.array.entryvalues_sortby_preferences);
+                value = prefValues[1];
                 PreferenceManager.getDefaultSharedPreferences(this).edit()
-                        .putString(getString(R.string.sortby_key), "1").apply();
+                        .putString(getString(R.string.sortby_key), value).apply();
+                break;
+            case R.id.action_sort_favorite:
+                prefValues = getResources()
+                        .getStringArray(R.array.entryvalues_sortby_preferences);
+                value = prefValues[2];
+                PreferenceManager.getDefaultSharedPreferences(this).edit()
+                        .putString(getString(R.string.sortby_key), value).apply();;
                 break;
             default:
                 Log.e(TAG, "Unhandled onOptionsItemSelected case in switch statement");

@@ -6,6 +6,7 @@
     <string name="action_settings">Settings</string>
     <string name="action_fetch_popular">Popular</string>
     <string name="action_fetch_top_rated">Top rated</string>
+    <string name="action_fetch_favorite">Favorites</string>
     <string name="title_activity_settings">Settings</string>
     <!-- END OF Toolbar -->
 
@@ -26,10 +27,12 @@
     <string-array name="entries_sortby_preferences">
         <item>Popularity</item>
         <item>Rating</item>
+        <item>Favorite</item>
     </string-array>
     <string-array name="entryvalues_sortby_preferences">
         <item>0</item>
         <item>1</item>
+        <item>2</item>
     </string-array>
     <!-- END OF Strings related to Settings -->
 

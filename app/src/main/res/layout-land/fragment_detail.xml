@@ -75,7 +75,8 @@
                     android:text="Favorite"
                     android:id="@+id/favorite"
                     android:layout_gravity="center_horizontal"
-                    android:checked="false" />
+                    android:checked="false"
+                    android:onClick="onCheck" />
             </LinearLayout>
         </LinearLayout>
 

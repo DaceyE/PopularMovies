@@ -74,7 +74,8 @@
                     android:layout_height="wrap_content"
                     android:text="Favorite"
                     android:id="@+id/favorite"
-                    android:checked="false" />
+                    android:checked="false"
+                    android:onClick="onCheck" />
             </LinearLayout>
         </LinearLayout>
 

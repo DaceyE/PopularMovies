@@ -75,6 +75,8 @@ public class MainFragment extends Fragment implements AdapterView.OnItemClickLis
             loaderBundle.putString(LOADER_BUNDLE_KEY, TMDbContract.Movies.IS_POPULAR);
         } else if (sortBy.equals("1")) {
             loaderBundle.putString(LOADER_BUNDLE_KEY, TMDbContract.Movies.IS_TOP_RATED);
+        } else if (sortBy.equals("2")){
+            loaderBundle.putString(LOADER_BUNDLE_KEY, TMDbContract.Movies.IS_FAVORITE);
         } else {
             Log.e(TAG, "unrecognized value from shared preference");
             loaderBundle = null;
@@ -101,7 +103,6 @@ public class MainFragment extends Fragment implements AdapterView.OnItemClickLis
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        //TODO use a more stable solution
         ((ListCommunicator) getActivity()).onClicked(id);
     }
 
@@ -119,6 +120,8 @@ public class MainFragment extends Fragment implements AdapterView.OnItemClickLis
                 loaderBundle.putString(LOADER_BUNDLE_KEY, TMDbContract.Movies.IS_POPULAR);
             } else if (sortBy.equals("1")) {
                 loaderBundle.putString(LOADER_BUNDLE_KEY, TMDbContract.Movies.IS_TOP_RATED);
+            } else if (sortBy.equals("2")){
+                loaderBundle.putString(LOADER_BUNDLE_KEY, TMDbContract.Movies.IS_FAVORITE);
             } else {
                 Log.e(TAG, "unrecognized value from shared preference," + sortBy);
                 loaderBundle = null;
