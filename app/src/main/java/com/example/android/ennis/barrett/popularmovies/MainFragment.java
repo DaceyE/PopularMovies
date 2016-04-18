@@ -15,6 +15,7 @@
  */
 package com.example.android.ennis.barrett.popularmovies;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
@@ -41,6 +42,7 @@ public class MainFragment extends Fragment implements AdapterView.OnItemClickLis
     private static final String TAG = "popularmovies " + MainFragment.class.getSimpleName();
     private GridAdapter mAdapter;
     private static final String LOADER_BUNDLE_KEY = "thebundlekeys";
+    private ListCommunicator mListener;
 
     /**
      * A interface for communicating with the activity
@@ -53,6 +55,18 @@ public class MainFragment extends Fragment implements AdapterView.OnItemClickLis
          */
         public void onClicked(long _id);
 
+    }
+
+    /**
+     * Called when a fragment is first attached to its context.
+     * {@link #onCreate(Bundle)} will be called after this.
+     *
+     * @param context
+     */
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mListener = (ListCommunicator) context;
     }
 
     @Override
@@ -103,7 +117,9 @@ public class MainFragment extends Fragment implements AdapterView.OnItemClickLis
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        ((ListCommunicator) getActivity()).onClicked(id);
+        if (mListener != null) {
+            mListener.onClicked(id);
+        }
     }
 
 

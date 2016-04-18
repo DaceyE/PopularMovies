@@ -20,6 +20,7 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -36,6 +37,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.List
     private static final String TAG = "popularmovies " + MainActivity.class.getSimpleName();
 
     private SharedPreferences.OnSharedPreferenceChangeListener SharedPreferenceChangeListener;
+    private boolean mTwoPane = false;
 
     @Override
     public void onResume() {
@@ -67,6 +69,11 @@ public class MainActivity extends AppCompatActivity implements MainFragment.List
 
         //Calls an a manual sync if the provider is empty
         syncImmediately();
+
+        if(findViewById(R.id.detail_container) != null){
+            Log.v(TAG, "Tablet layout");
+            mTwoPane = true;
+        }
     }
 
     /**
@@ -149,9 +156,20 @@ public class MainActivity extends AppCompatActivity implements MainFragment.List
     //MainFragment.ListCommunicator
     @Override
     public void onClicked(long _id) {
-        Intent intent = new Intent(this, DetailActivity.class);
-        intent.putExtra(DetailActivity._ID, _id);
-        startActivity(intent);
+        if(mTwoPane ){
+            DetailFragment fragment = new DetailFragment();
+            fragment.setID(_id);
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.detail_container, fragment)
+                    .addToBackStack(null)
+                    .commit();
+            fragment.setID(_id);
+        } else {
+            Log.d(TAG, "Id passed to detail activity: " + _id);
+            Intent intent = new Intent(this, DetailActivity.class);
+            intent.putExtra(DetailActivity._ID, _id);
+            startActivity(intent);
+        }
     }
 
 }

@@ -220,16 +220,28 @@ public class TMDbContentProvider extends ContentProvider {
     public int delete(Uri uri, String selection, String[] selectionArgs) {
         SQLiteDatabase database = mCustomSQLiteOpenHelper.getWritableDatabase();
         int match = mUriMatcher.match(uri);
+        int numberUpdated = 0;
         switch (match) {
             case MOVIES:
-                return database.delete(TMDbContract.Movies.TABLE_NAME, selection, selectionArgs);
+                numberUpdated = database.delete(TMDbContract.Movies.TABLE_NAME, selection,
+                        selectionArgs);
+                break;
             case VIDEOS:
-                return database.delete(TMDbContract.Videos.TABLE_NAME, selection, selectionArgs);
+                numberUpdated = database.delete(TMDbContract.Videos.TABLE_NAME, selection,
+                        selectionArgs);
+                break;
             case REVIEWS:
-                return database.delete(TMDbContract.Reviews.TABLE_NAME, selection, selectionArgs);
+                numberUpdated = database.delete(TMDbContract.Reviews.TABLE_NAME, selection,
+                        selectionArgs);
+                break;
             default:
                 throw new UnsupportedOperationException("Unknown URI: " + uri);
         }
+
+        if (numberUpdated != 0) {
+            getContext().getContentResolver().notifyChange(uri, null);
+        }
+        return numberUpdated;
     }
 
 
@@ -237,19 +249,28 @@ public class TMDbContentProvider extends ContentProvider {
     public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
         SQLiteDatabase database = mCustomSQLiteOpenHelper.getWritableDatabase();
         int match = mUriMatcher.match(uri);
+        int numberUpdated = 0;
         switch (match) {
             case MOVIES:
-                return database.update(TMDbContract.Movies.TABLE_NAME, values, selection,
+                numberUpdated = database.update(TMDbContract.Movies.TABLE_NAME, values, selection,
                         selectionArgs);
+                break;
             case VIDEOS:
-                return database.update(TMDbContract.Videos.TABLE_NAME, values, selection,
+                numberUpdated = database.update(TMDbContract.Videos.TABLE_NAME, values, selection,
                         selectionArgs);
+                break;
             case REVIEWS:
-                return database.update(TMDbContract.Reviews.TABLE_NAME, values, selection,
+                numberUpdated = database.update(TMDbContract.Reviews.TABLE_NAME, values, selection,
                         selectionArgs);
+                break;
             default:
                 throw new UnsupportedOperationException("Unknown URI: " + uri);
         }
+
+        if (numberUpdated != 0) {
+            getContext().getContentResolver().notifyChange(uri, null);
+        }
+        return numberUpdated;
     }
 
 }

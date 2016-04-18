@@ -2,6 +2,7 @@ package com.example.android.ennis.barrett.popularmovies;
 
 import android.content.ActivityNotFoundException;
 import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -44,19 +45,38 @@ public class DetailFragment extends Fragment implements View.OnClickListener {
     private static final String TAG = "popularmovies " + DetailFragment.class.getSimpleName();
 
     private long mID = -1;
+    private static final String ID_KEY = "theIdkey";
     private View mRootView;
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        if (mID != -1 && getView() != null){
+            setDetails(mID);
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mRootView = inflater.inflate(R.layout.fragment_detail, container, false);
 
+        if (savedInstanceState != null) {
+            mID = savedInstanceState.getLong(ID_KEY);
+        }
+
         return mRootView;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putLong(ID_KEY, mID);
     }
 
     public void setID(long _id) {
         this.mID = _id;
-        setDetails(mID);
     }
 
     /**
@@ -107,6 +127,23 @@ public class DetailFragment extends Fragment implements View.OnClickListener {
         Picasso.with(getActivity()).load(posterURLString).into(poster);
 
         String bool = cursor.getString(cursor.getColumnIndex(TMDbContract.Movies.IS_FAVORITE));
+
+        isFavorite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Uri uriTMDb = Uri.parse("content://" + TMDbContentProvider.AUTHORITY + "/"
+                        + TMDbContract.Movies.TABLE_NAME);
+                ContentValues value = new ContentValues();
+                String isFavorite = "0";
+                if (((CompoundButton) v).isChecked()){
+                    isFavorite = "1";
+                }
+
+                value.put(TMDbContract.Movies.IS_FAVORITE, isFavorite);
+                int num = getActivity().getContentResolver().update(uriTMDb, value, TMDbContract.Movies._ID + " = ?",
+                        new String[]{Long.toString(mID)});
+            }
+        });
 
         //short circuit logic stops app from crashing..So don't reverse the expression
         if(bool != null && bool.equals("1")) {

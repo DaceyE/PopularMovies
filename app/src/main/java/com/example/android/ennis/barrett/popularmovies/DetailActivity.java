@@ -55,18 +55,4 @@ public class DetailActivity extends AppCompatActivity {
         detailFragment.setID(_id);
     }
 
-    public void onCheck(View v){
-        Uri uriTMDb = Uri.parse("content://" + TMDbContentProvider.AUTHORITY + "/"
-                + TMDbContract.Movies.TABLE_NAME);
-        ContentValues value = new ContentValues();
-        String isFavorite = "0";
-        if (((CompoundButton) v).isChecked()){
-            isFavorite = "1";
-        }
-
-        value.put(TMDbContract.Movies.IS_FAVORITE, isFavorite);
-        int num = getContentResolver().update(uriTMDb, value, TMDbContract.Movies._ID + " = ?",
-                new String[]{Long.toString(id)});
-    }
-
 }
