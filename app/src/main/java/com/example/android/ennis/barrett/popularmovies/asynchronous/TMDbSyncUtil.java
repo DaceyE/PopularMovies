@@ -3,6 +3,7 @@ package com.example.android.ennis.barrett.popularmovies.asynchronous;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.net.Uri;
 import android.util.Log;
 
@@ -32,6 +33,76 @@ public class TMDbSyncUtil {
     public static final int MOVIES_TOP_RATED = 1;
 
     //private Context mContext;
+
+    public static void deletePopularAndTopRated(Context context){
+        ContentResolver contentResolver = context.getContentResolver();
+        Uri uriMovies = Uri.parse("content://" + TMDbContentProvider.AUTHORITY + "/"
+                + TMDbContract.Movies.TABLE_NAME);
+        Uri uriReviews = Uri.parse("content://" + TMDbContentProvider.AUTHORITY + "/"
+                + TMDbContract.Reviews.TABLE_NAME);
+        Uri uriVideos = Uri.parse("content://" + TMDbContentProvider.AUTHORITY + "/"
+                + TMDbContract.Videos.TABLE_NAME);
+
+        ContentValues removePopAndTop = new ContentValues(2);
+        removePopAndTop.put(TMDbContract.Movies.IS_POPULAR, "0");
+        removePopAndTop.put(TMDbContract.Movies.IS_TOP_RATED, "0");
+
+        contentResolver.update(uriMovies,
+                removePopAndTop,
+                TMDbContract.Movies.IS_FAVORITE + " = ?", new String[]{"1"});
+
+        contentResolver.delete(uriMovies, TMDbContract.Movies.IS_POPULAR + " = ? OR " + TMDbContract.Movies.IS_TOP_RATED + " = ?", new String[]{"1","1"});
+
+        Cursor favoriteMovieIds = getFavoriteIds(context);
+
+        int numberOfIds = favoriteMovieIds.getCount();
+        String[] movieIds = new String[numberOfIds];
+        String whereClauseVideos = "";
+        String whereClauseReviews = "";
+
+        for(int i = 0; i < numberOfIds; i++){
+            favoriteMovieIds.moveToNext();
+            movieIds[i] = Integer.toString(
+                    favoriteMovieIds.getInt(favoriteMovieIds.getColumnIndex(TMDbContract.Movies.MOVIE_ID)));
+            if (i == numberOfIds - 1) {
+                whereClauseVideos += TMDbContract.Videos.MOVIE_IDS + " != ? ";
+                whereClauseReviews += TMDbContract.Videos.MOVIE_IDS + " != ? ";
+            } else {
+                whereClauseVideos += TMDbContract.Videos.MOVIE_IDS + " != ? OR ";
+                whereClauseReviews += TMDbContract.Reviews.MOVIE_IDS + " != ? OR ";
+            }
+        }
+
+        contentResolver.delete(uriVideos,whereClauseVideos, movieIds);
+        contentResolver.delete(uriReviews, whereClauseReviews, movieIds);
+    }
+
+    public static Cursor getFavoriteIds(Context context){
+        Uri uriMovies = Uri.parse("content://" + TMDbContentProvider.AUTHORITY + "/"
+                + TMDbContract.Movies.TABLE_NAME);
+
+        return context.getContentResolver().query(uriMovies,
+                new String[]{TMDbContract.Movies.MOVIE_ID},
+                TMDbContract.Movies.IS_FAVORITE + " = ?", new String[]{"1"}, null);
+    }
+
+    public static void deleteFavorite(Context context, int movieId){
+        Uri uriMovies = Uri.parse("content://" + TMDbContentProvider.AUTHORITY + "/"
+                + TMDbContract.Movies.TABLE_NAME);
+        Uri uriReviews = Uri.parse("content://" + TMDbContentProvider.AUTHORITY + "/"
+                + TMDbContract.Reviews.TABLE_NAME);
+        Uri uriVideos = Uri.parse("content://" + TMDbContentProvider.AUTHORITY + "/"
+                + TMDbContract.Videos.TABLE_NAME);
+        String[] whereArgs = new  String[]{Integer.toString(movieId)};
+
+        Log.e(TAG, "deleteFavorite");
+        ContentResolver contentResolver = context.getContentResolver();
+        int i = contentResolver.delete(uriMovies, TMDbContract.Movies.MOVIE_ID + " = ?", whereArgs);
+        Log.e(TAG, "favorite movies deleted  " + i);
+
+        contentResolver.delete(uriVideos, TMDbContract.Videos.MOVIE_IDS + " = ?", whereArgs);
+        contentResolver.delete(uriReviews, TMDbContract.Reviews.MOVIE_IDS + " = ?", whereArgs);
+    }
 
 
     /**
@@ -152,6 +223,7 @@ public class TMDbSyncUtil {
             int[] ids = new int[resultLength];
             int isPopular;
             int isTopRated;
+            int isFavorite;
 
             switch (type) {
                 case MOVIES_POPULAR:
@@ -166,6 +238,8 @@ public class TMDbSyncUtil {
                     isPopular = 0;
                     isTopRated = 0;
             }
+            Cursor cursor = getFavoriteIds(context);
+            ContentResolver contentResolver = context.getContentResolver();
 
             for (int i = 0; i < resultLength; i++) {
                 JSONObject movie = results.getJSONObject(i);
@@ -183,8 +257,20 @@ public class TMDbSyncUtil {
                         movie.getDouble(TMDbContract.Movies.POPULARITY));
                 contentValues[i].put(TMDbContract.Movies.VOTE_AVERAGE,
                         movie.getDouble(TMDbContract.Movies.VOTE_AVERAGE));
-                contentValues[i].put(TMDbContract.Movies.MOVIE_ID,
-                        movie.getInt(TMDbContract.Movies.MOVIE_ID));
+
+                int moveId = movie.getInt(TMDbContract.Movies.MOVIE_ID);
+                contentValues[i].put(TMDbContract.Movies.MOVIE_ID, moveId);
+                cursor.moveToPosition(-1);
+                while (cursor.moveToNext()){
+                    int favoriteId = cursor.getInt(cursor.getColumnIndex(TMDbContract.Movies.MOVIE_ID));
+                    if (favoriteId == moveId){
+                        deleteFavorite(context, moveId);
+                        isFavorite = 1;
+                        contentValues[i].put(TMDbContract.Movies.IS_FAVORITE, isFavorite);
+                        break;
+                    }
+                }
+
                 //TODO read up on how to have the col initialized to 0 by defualt
                 contentValues[i].put(TMDbContract.Movies.IS_POPULAR, isPopular);
                 contentValues[i].put(TMDbContract.Movies.IS_TOP_RATED, isTopRated);
@@ -192,7 +278,6 @@ public class TMDbSyncUtil {
                 ids[i] = movie.getInt(TMDbContract.Movies.MOVIE_ID);
             }
 
-            ContentResolver contentResolver = context.getContentResolver();
             //TODO Read Uri APIs
             //TODO declare URI constants in contract
             Uri uriTMDb = Uri.parse("content://" + TMDbContentProvider.AUTHORITY

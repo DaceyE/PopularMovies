@@ -83,6 +83,8 @@ public class TMDbSyncAdapter extends AbstractThreadedSyncAdapter {
         //ArrayList<Integer> list = new ArrayList<>(40);
         final Context context = getContext();
 
+        TMDbSyncUtil.deletePopularAndTopRated(context);
+
         final int[] ids = new int[40];
         int externalIndex = 0;
         int[] tempIds = TMDbSyncUtil.fetchMovies(TMDbSyncUtil.MOVIES_POPULAR, context);
@@ -98,7 +100,7 @@ public class TMDbSyncAdapter extends AbstractThreadedSyncAdapter {
 
         Looper.prepare();
         Log.d(TAG, "Started");
-        new CountDownTimer(80000L, 10000L)
+        new CountDownTimer(100000L, 10000L)
         {
             int x = 0;
             int y = 14;
@@ -121,7 +123,7 @@ public class TMDbSyncAdapter extends AbstractThreadedSyncAdapter {
                 Log.d(TAG, x +"");
                 Log.d(TAG, "executed onFinish");
 
-                while (x < 28) {
+                while (x <= 28) {
                     Log.e(TAG, "Loop in onFinish of ContDownTimer executed.  May overload server");
                     int[] array = Arrays.copyOfRange(ids, x, y);
                     TMDbSyncUtil.fetchDetails(array, context);
