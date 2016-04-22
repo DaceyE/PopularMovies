@@ -104,6 +104,17 @@ public class TMDbSyncUtil {
         contentResolver.delete(uriReviews, TMDbContract.Reviews.MOVIE_IDS + " = ?", whereArgs);
     }
 
+    public static int getAmountOfPopularAndTopRated(Context context){
+        Uri uriTMDb = Uri.parse("content://" + TMDbContentProvider.AUTHORITY + "/"
+                + TMDbContract.Movies.TABLE_NAME);
+
+        int numMovies = context.getContentResolver().query(uriTMDb,
+                new String[]{TMDbContract.Movies.MOVIE_ID},
+                TMDbContract.Movies.IS_POPULAR + " = ? OR " + TMDbContract.Movies.IS_TOP_RATED + " = ? ", new String[]{"1","1"}, null).getCount();
+        return  numMovies;
+
+    }
+
 
     /**
      * makes the network call to fetch the data and the calls storeJsonMovies

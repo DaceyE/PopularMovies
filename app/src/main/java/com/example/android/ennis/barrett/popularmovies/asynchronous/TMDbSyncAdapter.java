@@ -163,12 +163,12 @@ public class TMDbSyncAdapter extends AbstractThreadedSyncAdapter {
         }
     }
 
-    public static void syncImmediately(Context context) {
+    public static void syncImmediately(Account account) {
         Log.i(TAG, "syncImmediately");
         Bundle bundle = new Bundle();
         bundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
         bundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
-        ContentResolver.requestSync(getSyncAccount(context),
+        ContentResolver.requestSync(account,
                 "com.example.android.ennis.barrett.popularmovies.data", bundle);
     }
 
@@ -193,7 +193,13 @@ public class TMDbSyncAdapter extends AbstractThreadedSyncAdapter {
                 return null;
             }
             onAccountCreated(newAccount, context);
+        } else {
+            int numOfMovies = TMDbSyncUtil.getAmountOfPopularAndTopRated(context);
+            if (numOfMovies == 0) {
+                syncImmediately(newAccount);
+            }
         }
+
         return newAccount;
     }
 
