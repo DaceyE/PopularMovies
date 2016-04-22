@@ -37,7 +37,7 @@ public class VideoCursorAdapter extends ResourceCursorAdapter {
         String key = cursor.getString(cursor.getColumnIndex(TMDbContract.Videos.KEY));
         String url = "http://img.youtube.com/vi/" + key + "/0.jpg";
 
-        Picasso.with(context).load(url).into(imageView);
+        Picasso.with(context).load(url).placeholder(R.mipmap.video_placeholder).into(imageView);
 
         //Associates the youtube key with each view
         view.setTag(key);

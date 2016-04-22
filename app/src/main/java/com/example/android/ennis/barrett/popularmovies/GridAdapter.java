@@ -77,7 +77,7 @@ public class GridAdapter extends BaseAdapter {
         ImageView imageView = (ImageView) convertView.findViewById(R.id.poster);
 
         String posterURLString = "http://image.tmdb.org/t/p/w185/" + poster;
-        Picasso.with(mContext).load(posterURLString).into(imageView);
+        Picasso.with(mContext).load(posterURLString).placeholder(R.mipmap.movie_placeholder).into(imageView);
 
         return convertView;
     }
