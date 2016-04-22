@@ -229,6 +229,11 @@ public class TMDbSyncUtil {
         Uri droidUri;
 
         for (int i = 0; i < movieIds.length; i++) {
+            if (movieIds[i] == 0){
+                rawJsonVideos[i] = "";
+                rawJsonReviews[i] = "";
+                continue;
+            }
             myurl = MOVIE_BASE_URL;
             myurl += "/" + movieIds[i] + "/videos" + "?";
             droidUri = Uri.parse(myurl).buildUpon()
@@ -249,7 +254,8 @@ public class TMDbSyncUtil {
             storeJsonVideos(rawJsonVideos, context);
             storeJsonReviews(rawJsonReviews, context);
         } catch (JSONException j){
-            Log.e(TAG, "JSON exception...also this was temp code...");
+            j.printStackTrace();
+            Log.e(TAG,"Error ", j);
         }
 
     }

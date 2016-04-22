@@ -27,6 +27,8 @@ import android.content.SyncResult;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.CountDownTimer;
+import android.os.Looper;
 import android.util.Log;
 
 import com.example.android.ennis.barrett.popularmovies.BuildConfig;
@@ -45,6 +47,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Handle the transfer of data between a server and an
@@ -73,13 +76,64 @@ public class TMDbSyncAdapter extends AbstractThreadedSyncAdapter {
     @Override
     public void onPerformSync(Account account, Bundle extras, String authority,
                               ContentProviderClient provider, SyncResult syncResult) {
-
+        //TMDbSyncUtil.prepareLooper();
         Log.i(TAG, "onPerformSync");
-        Context context = getContext();
-        int[] ids = TMDbSyncUtil.fetchMovies(TMDbSyncUtil.MOVIES_POPULAR, context);
-        TMDbSyncUtil.fetchDetails(ids, context);
-        ids = TMDbSyncUtil.fetchMovies(TMDbSyncUtil.MOVIES_TOP_RATED, context);
-        TMDbSyncUtil.fetchDetails(ids, context);
+
+
+        //ArrayList<Integer> list = new ArrayList<>(40);
+        final Context context = getContext();
+
+        final int[] ids = new int[40];
+        int externalIndex = 0;
+        int[] tempIds = TMDbSyncUtil.fetchMovies(TMDbSyncUtil.MOVIES_POPULAR, context);
+        for (int id : tempIds){
+            ids[externalIndex] = id;
+            externalIndex++;
+        }
+        tempIds = TMDbSyncUtil.fetchMovies(TMDbSyncUtil.MOVIES_TOP_RATED, context);
+        for (int id : tempIds){
+            ids[externalIndex] = id;
+            externalIndex++;
+        }
+
+        Looper.prepare();
+        Log.d(TAG, "Started");
+        new CountDownTimer(80000L, 10000L)
+        {
+            int x = 0;
+            int y = 14;
+
+            @Override
+            public void onTick(long millisUntilFinished) {
+                int[] array = Arrays.copyOfRange(ids, x, y);
+                TMDbSyncUtil.fetchDetails(array, context);
+
+                if (x >= 28){
+                    Looper.myLooper().quit();
+                }
+
+                x += 14;
+                y += 14;
+            }
+
+            @Override
+            public void onFinish(){
+                Log.d(TAG, x +"");
+                Log.d(TAG, "executed onFinish");
+
+                while (x < 28) {
+                    Log.e(TAG, "Loop in onFinish of ContDownTimer executed.  May overload server");
+                    int[] array = Arrays.copyOfRange(ids, x, y);
+                    TMDbSyncUtil.fetchDetails(array, context);
+                    x += 13;
+                    y += 13;
+                }
+
+                Looper.myLooper().quit();
+            }
+        }.start();
+        Looper.loop();
+        Log.d(TAG, "onPerformSync ended");
 
     }
 
