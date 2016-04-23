@@ -4,6 +4,8 @@
     android:orientation="vertical"
     android:fillViewport="false">
 
+    <!-- TODO I have repeat code in these layouts.  The code that match in both layouts should be added to each layouts via a include.-->
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"

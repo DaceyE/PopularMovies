@@ -21,6 +21,7 @@ import android.preference.PreferenceFragment;
 //TODO read about this import
 import com.example.android.ennis.barrett.popularmovies.R;
 
+//TODO use support version so app can support back to api 7
 public class SettingsFragment extends PreferenceFragment {
 
     @Override

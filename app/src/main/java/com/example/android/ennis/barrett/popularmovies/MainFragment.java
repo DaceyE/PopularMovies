@@ -72,7 +72,6 @@ public class MainFragment extends Fragment implements AdapterView.OnItemClickLis
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.v(TAG, "onCreateView started");
 
-        //TODO I feel like the root view from fragment_main should have been a GridView (as opposed to LinearLayout with Gridview child) and I should be able to use the rootView from inflation as the reference to gridview
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
         GridView gridView = (GridView) rootView.findViewById(R.id.gridView);
 

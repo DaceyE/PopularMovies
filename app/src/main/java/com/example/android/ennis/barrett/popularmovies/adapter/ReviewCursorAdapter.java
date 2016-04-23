@@ -27,7 +27,7 @@ import com.example.android.ennis.barrett.popularmovies.data.TMDbContract;
 import com.squareup.picasso.Picasso;
 
 /**
- * Created by Barrett on 4/16/2016.
+ * Displays Review cards
  */
 public class ReviewCursorAdapter extends ResourceCursorAdapter {
     public ReviewCursorAdapter(Context context, int layout, Cursor cursor){

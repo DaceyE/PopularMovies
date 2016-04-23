@@ -27,7 +27,7 @@ import com.example.android.ennis.barrett.popularmovies.data.TMDbContract;
 import com.squareup.picasso.Picasso;
 
 /**
- * Created by Barrett on 4/16/2016.
+ * Displays video cards.
  */
 public class VideoCursorAdapter extends ResourceCursorAdapter {
 

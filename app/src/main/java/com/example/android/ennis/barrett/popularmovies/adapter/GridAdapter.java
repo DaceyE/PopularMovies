@@ -28,7 +28,7 @@ import com.example.android.ennis.barrett.popularmovies.data.TMDbContract;
 import com.squareup.picasso.Picasso;
 
 /**
- * Created by Barrett on 2/29/2016.
+ * A custom adapter for displaying movie posters with picasso.
  */
 public class GridAdapter extends BaseAdapter {
 //TODO I should be extending a cursor adapter and not baseAdapter
@@ -74,15 +74,21 @@ public class GridAdapter extends BaseAdapter {
             convertView = layoutInflater.inflate(R.layout.poster_item, parent, false);
         }
 
-        //TODO consider using a uri and additionally relocation the path as opposed the current hardcoding
         ImageView imageView = (ImageView) convertView.findViewById(R.id.poster);
 
         String posterURLString = "http://image.tmdb.org/t/p/w185/" + poster;
-        Picasso.with(mContext).load(posterURLString).placeholder(R.mipmap.movie_placeholder).into(imageView);
+        Picasso.with(mContext)
+                .load(posterURLString)
+                .placeholder(R.mipmap.movie_placeholder)
+                .into(imageView);
 
         return convertView;
     }
 
+    /**
+     * Changes the data to display.
+     * @param newCursor The new cursor to display.
+     */
     public void changeCursor(Cursor newCursor) {
         if (newCursor == mCursor) return;
 

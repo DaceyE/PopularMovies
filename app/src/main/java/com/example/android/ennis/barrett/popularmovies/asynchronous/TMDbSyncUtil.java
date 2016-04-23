@@ -38,16 +38,31 @@ import java.net.URL;
 import java.util.ArrayList;
 
 /**
- * Utility methods for the syncAdapter
+ * Utility methods for the syncAdapter.  Makes the SyncAdapter more readable by handling most code
+ * needed to make the network calls in onPerformSync.
  */
 public class TMDbSyncUtil {
+
     private static final String TAG = "popularmovies " + TMDbSyncUtil.class.getSimpleName();
 
+    /**
+     * Flag for indiacting if fetchMovies should get data from the Popular end point
+     */
     public static final int MOVIES_POPULAR = 0;
+
+    /**
+     * Flag for indiacting if fetchMovies should get data from the Top Rated end point
+     */
     public static final int MOVIES_TOP_RATED = 1;
 
-    //private Context mContext;
 
+
+
+    /**
+     * Removes all data from themovies, thevideos, and thereviews tables.  Does not remove data
+     * flagged favorite but the columns istoprated, and ispopular will be set to false, "0".
+     * @param context
+     */
     public static void deletePopularAndTopRated(Context context){
         ContentResolver contentResolver = context.getContentResolver();
 
@@ -85,6 +100,11 @@ public class TMDbSyncUtil {
         contentResolver.delete(TMDbContract.Reviews.URI, whereClauseReviews, movieIds);
     }
 
+    /**
+     * Gets the ids of any movies marked as favorite
+     * @param context
+     * @return A cursor with the movie ids (from server, not _id) of favorites
+     */
     public static Cursor getFavoriteIds(Context context){
         return context.getContentResolver().query(
                 TMDbContract.Movies.URI,
@@ -94,6 +114,10 @@ public class TMDbSyncUtil {
                 null);
     }
 
+    /**
+     * Removes all data from themovies, thevideos, and thereviews tables.
+     * @param context
+     */
     public static void deleteFavorite(Context context, int movieId){
         String[] whereArgs = new  String[]{Integer.toString(movieId)};
 
@@ -106,6 +130,11 @@ public class TMDbSyncUtil {
         contentResolver.delete(TMDbContract.Reviews.URI, TMDbContract.Reviews.MOVIE_IDS + " = ?", whereArgs);
     }
 
+    /**
+     * Gives the number of movies in db that are popular or top rated.
+     * @param context
+     * @return the amount of movies marked as top rated and popular
+     */
     public static int getAmountOfPopularAndTopRated(Context context){
         int numMovies = context.getContentResolver().query(TMDbContract.Movies.URI,
                 new String[]{TMDbContract.Movies.MOVIE_ID},
@@ -383,11 +412,7 @@ public class TMDbSyncUtil {
 
         } catch (IOException e) {
             Log.e(TAG, "Error ", e);
-            // If the code didn't successfully get the weather data, there's no point in attempting
-            // to parse it.
-            //} catch (JSONException e) {
-            //Log.e(TAG, e.getMessage(), e);
-            //e.printStackTrace();
+            e.printStackTrace();
         } finally {
             if (connection != null) {
                 connection.disconnect();

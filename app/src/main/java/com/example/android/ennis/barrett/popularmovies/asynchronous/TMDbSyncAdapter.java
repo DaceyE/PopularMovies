@@ -60,7 +60,6 @@ public class TMDbSyncAdapter extends AbstractThreadedSyncAdapter {
     @Override
     public void onPerformSync(Account account, Bundle extras, String authority,
                               ContentProviderClient provider, SyncResult syncResult) {
-        //TMDbSyncUtil.prepareLooper();
         Log.i(TAG, "onPerformSync");
 
 
@@ -147,6 +146,9 @@ public class TMDbSyncAdapter extends AbstractThreadedSyncAdapter {
         }
     }
 
+    /**
+     * Helper method to schedule an immediate sync
+     */
     public static void syncImmediately(Account account) {
         Log.i(TAG, "syncImmediately");
         Bundle bundle = new Bundle();

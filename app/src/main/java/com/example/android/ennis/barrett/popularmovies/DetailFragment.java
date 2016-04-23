@@ -196,7 +196,7 @@ public class DetailFragment extends Fragment implements View.OnClickListener {
     } //End of setDetails
 
     /**
-     * Called when a view has been clicked.
+     * Launches youtube app or web browser if there is no youtube app on the phone.
      *
      * @param v The view that was clicked.
      */
