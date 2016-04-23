@@ -16,7 +16,6 @@
 package com.example.android.ennis.barrett.popularmovies.data;
 
 import android.content.ContentUris;
-import android.content.res.Resources;
 import android.net.Uri;
 import android.provider.BaseColumns;
 

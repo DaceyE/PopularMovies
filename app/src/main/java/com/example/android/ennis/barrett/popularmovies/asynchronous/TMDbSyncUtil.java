@@ -23,7 +23,6 @@ import android.net.Uri;
 import android.util.Log;
 
 import com.example.android.ennis.barrett.popularmovies.BuildConfig;
-import com.example.android.ennis.barrett.popularmovies.data.TMDbContentProvider;
 import com.example.android.ennis.barrett.popularmovies.data.TMDbContract;
 
 import org.json.JSONArray;

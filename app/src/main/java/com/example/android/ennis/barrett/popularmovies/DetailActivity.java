@@ -15,18 +15,9 @@
  */
 package com.example.android.ennis.barrett.popularmovies;
 
-import android.content.ContentValues;
-import android.net.Uri;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.Toast;
-
-import com.example.android.ennis.barrett.popularmovies.data.TMDbContentProvider;
-import com.example.android.ennis.barrett.popularmovies.data.TMDbContract;
 
 public class DetailActivity extends AppCompatActivity {
 

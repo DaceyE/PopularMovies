@@ -17,7 +17,6 @@ package com.example.android.ennis.barrett.popularmovies;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentTransaction;
@@ -29,8 +28,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.android.ennis.barrett.popularmovies.asynchronous.TMDbSyncAdapter;
-import com.example.android.ennis.barrett.popularmovies.data.TMDbContentProvider;
-import com.example.android.ennis.barrett.popularmovies.data.TMDbContract;
 
 public class MainActivity extends AppCompatActivity implements MainFragment.ListCommunicator {
 
