@@ -150,7 +150,7 @@ public class TMDbSyncUtil {
      * @return Returns an array of ids of the movies that were inserted
      */
     public static int[] fetchMovies(int type, Context context) {
-        int[] ids = null;
+        int[] ids = {};
         HttpURLConnection connection = null;
         BufferedReader reader = null;
 
