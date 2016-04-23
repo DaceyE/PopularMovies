@@ -102,10 +102,8 @@ public class DetailFragment extends Fragment implements View.OnClickListener {
         /*
          * Queries the movies table
          */
-        Uri uriTMDb = Uri.parse("content://" + TMDbContentProvider.AUTHORITY + "/"
-                + TMDbContract.Movies.TABLE_NAME);
         Cursor cursor = contentResolver.query
-                (uriTMDb, null, TMDbContract.Movies.ID + " = ?", new String[]{mID + ""}, null);
+                (TMDbContract.Movies.URI, null, TMDbContract.Movies.ID + " = ?", new String[]{mID + ""}, null);
         cursor.moveToFirst();
 
         /*
@@ -131,8 +129,6 @@ public class DetailFragment extends Fragment implements View.OnClickListener {
         isFavorite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Uri uriTMDb = Uri.parse("content://" + TMDbContentProvider.AUTHORITY + "/"
-                        + TMDbContract.Movies.TABLE_NAME);
                 ContentValues value = new ContentValues();
                 String isFavorite = "0";
                 if (((CompoundButton) v).isChecked()){
@@ -140,7 +136,7 @@ public class DetailFragment extends Fragment implements View.OnClickListener {
                 }
 
                 value.put(TMDbContract.Movies.IS_FAVORITE, isFavorite);
-                int num = getActivity().getContentResolver().update(uriTMDb, value, TMDbContract.Movies._ID + " = ?",
+                int num = getActivity().getContentResolver().update(TMDbContract.Movies.URI, value, TMDbContract.Movies._ID + " = ?",
                         new String[]{Long.toString(mID)});
             }
         });
@@ -164,27 +160,13 @@ public class DetailFragment extends Fragment implements View.OnClickListener {
          * Set up the videos LinearLayout.
          * Queries the table and then creates TextViews to display the results
          */
-        uriTMDb = Uri.parse("content://" + TMDbContentProvider.AUTHORITY + "/"
-                + TMDbContract.Videos.TABLE_NAME);
-
-        /*Cursor cursorVideos = contentResolver.query(uriTMDb, new String[]{TMDbContract.Videos.NAME},
-                TMDbContract.Videos.MOVIE_IDS + " = ?",
-                new String[]{cursor.getString(cursor.getColumnIndex(TMDbContract.Movies.MOVIE_ID))},
-                null);*/
-        Cursor cursorVideos = contentResolver.query(uriTMDb, null,
+        Cursor cursorVideos = contentResolver.query(TMDbContract.Videos.URI, null,
                 TMDbContract.Videos.MOVIE_IDS + " = ?",
                 new String[]{cursor.getString(cursor.getColumnIndex(TMDbContract.Movies.MOVIE_ID))},
                 null);
         VideoCursorAdapter adapter = new VideoCursorAdapter(getActivity(),R.layout.video_card,cursorVideos);
 
         //loop to create TextViews to display the results
-        /*while(cursorVideos.moveToNext()){
-            View view = adapter.getView();
-            TextView textView = new TextView(getActivity());
-            textView.setText(cursorVideos.getString(cursorVideos
-                    .getColumnIndex(TMDbContract.Videos.NAME)));
-            videos.addView(textView);
-        }*/
         for (int i = 0; i < adapter.getCount(); i++){
             View view = adapter.getView(i,null,null);
             view.setOnClickListener(this);
@@ -196,10 +178,7 @@ public class DetailFragment extends Fragment implements View.OnClickListener {
          * Set up the reviews LinearLayout.
          * Queries the table and then creates TextViews to display the results
          */
-        uriTMDb = Uri.parse("content://" + TMDbContentProvider.AUTHORITY + "/"
-                + TMDbContract.Reviews.TABLE_NAME);
-
-        Cursor cursorReviews = contentResolver.query(uriTMDb, null,
+        Cursor cursorReviews = contentResolver.query(TMDbContract.Reviews.URI, null,
                 TMDbContract.Reviews.MOVIE_IDS + " = ?",
                 new String[]{cursor.getString(cursor.getColumnIndex(TMDbContract.Movies.MOVIE_ID))},
                 null);
@@ -213,21 +192,7 @@ public class DetailFragment extends Fragment implements View.OnClickListener {
                 reviews.addView(view);
             }
         }
-
-        /*Cursor cursorReviews= contentResolver.query(uriTMDb, new String[]{TMDbContract.Reviews.AUTHOR},
-                TMDbContract.Reviews.MOVIE_IDS + " = ?",
-                new String[]{cursor.getString(cursor.getColumnIndex(TMDbContract.Movies.MOVIE_ID))},
-                null);
-
-        //loop to create TextViews to display the results
-        while(cursorReviews.moveToNext()){
-            TextView textView = new TextView(getActivity());
-            textView.setText(cursorReviews.getString(cursorReviews
-                    .getColumnIndex(TMDbContract.Reviews.AUTHOR)));
-            reviews.addView(textView);
-        }*/
-
-    }
+    } //End of setDetails
 
     /**
      * Called when a view has been clicked.

@@ -51,22 +51,16 @@ public class TMDbSyncUtil {
 
     public static void deletePopularAndTopRated(Context context){
         ContentResolver contentResolver = context.getContentResolver();
-        Uri uriMovies = Uri.parse("content://" + TMDbContentProvider.AUTHORITY + "/"
-                + TMDbContract.Movies.TABLE_NAME);
-        Uri uriReviews = Uri.parse("content://" + TMDbContentProvider.AUTHORITY + "/"
-                + TMDbContract.Reviews.TABLE_NAME);
-        Uri uriVideos = Uri.parse("content://" + TMDbContentProvider.AUTHORITY + "/"
-                + TMDbContract.Videos.TABLE_NAME);
 
         ContentValues removePopAndTop = new ContentValues(2);
         removePopAndTop.put(TMDbContract.Movies.IS_POPULAR, "0");
         removePopAndTop.put(TMDbContract.Movies.IS_TOP_RATED, "0");
 
-        contentResolver.update(uriMovies,
+        contentResolver.update(TMDbContract.Movies.URI,
                 removePopAndTop,
                 TMDbContract.Movies.IS_FAVORITE + " = ?", new String[]{"1"});
 
-        contentResolver.delete(uriMovies, TMDbContract.Movies.IS_POPULAR + " = ? OR " + TMDbContract.Movies.IS_TOP_RATED + " = ?", new String[]{"1","1"});
+        contentResolver.delete(TMDbContract.Movies.URI, TMDbContract.Movies.IS_POPULAR + " = ? OR " + TMDbContract.Movies.IS_TOP_RATED + " = ?", new String[]{"1","1"});
 
         Cursor favoriteMovieIds = getFavoriteIds(context);
 
@@ -88,46 +82,37 @@ public class TMDbSyncUtil {
             }
         }
 
-        contentResolver.delete(uriVideos,whereClauseVideos, movieIds);
-        contentResolver.delete(uriReviews, whereClauseReviews, movieIds);
+        contentResolver.delete(TMDbContract.Videos.URI,whereClauseVideos, movieIds);
+        contentResolver.delete(TMDbContract.Reviews.URI, whereClauseReviews, movieIds);
     }
 
     public static Cursor getFavoriteIds(Context context){
-        Uri uriMovies = Uri.parse("content://" + TMDbContentProvider.AUTHORITY + "/"
-                + TMDbContract.Movies.TABLE_NAME);
-
-        return context.getContentResolver().query(uriMovies,
+        return context.getContentResolver().query(
+                TMDbContract.Movies.URI,
                 new String[]{TMDbContract.Movies.MOVIE_ID},
-                TMDbContract.Movies.IS_FAVORITE + " = ?", new String[]{"1"}, null);
+                TMDbContract.Movies.IS_FAVORITE + " = ?",
+                new String[]{"1"},
+                null);
     }
 
     public static void deleteFavorite(Context context, int movieId){
-        Uri uriMovies = Uri.parse("content://" + TMDbContentProvider.AUTHORITY + "/"
-                + TMDbContract.Movies.TABLE_NAME);
-        Uri uriReviews = Uri.parse("content://" + TMDbContentProvider.AUTHORITY + "/"
-                + TMDbContract.Reviews.TABLE_NAME);
-        Uri uriVideos = Uri.parse("content://" + TMDbContentProvider.AUTHORITY + "/"
-                + TMDbContract.Videos.TABLE_NAME);
         String[] whereArgs = new  String[]{Integer.toString(movieId)};
 
         Log.e(TAG, "deleteFavorite");
         ContentResolver contentResolver = context.getContentResolver();
-        int i = contentResolver.delete(uriMovies, TMDbContract.Movies.MOVIE_ID + " = ?", whereArgs);
+        int i = contentResolver.delete(TMDbContract.Movies.URI, TMDbContract.Movies.MOVIE_ID + " = ?", whereArgs);
         Log.e(TAG, "favorite movies deleted  " + i);
 
-        contentResolver.delete(uriVideos, TMDbContract.Videos.MOVIE_IDS + " = ?", whereArgs);
-        contentResolver.delete(uriReviews, TMDbContract.Reviews.MOVIE_IDS + " = ?", whereArgs);
+        contentResolver.delete(TMDbContract.Videos.URI, TMDbContract.Videos.MOVIE_IDS + " = ?", whereArgs);
+        contentResolver.delete(TMDbContract.Reviews.URI, TMDbContract.Reviews.MOVIE_IDS + " = ?", whereArgs);
     }
 
     public static int getAmountOfPopularAndTopRated(Context context){
-        Uri uriTMDb = Uri.parse("content://" + TMDbContentProvider.AUTHORITY + "/"
-                + TMDbContract.Movies.TABLE_NAME);
-
-        int numMovies = context.getContentResolver().query(uriTMDb,
+        int numMovies = context.getContentResolver().query(TMDbContract.Movies.URI,
                 new String[]{TMDbContract.Movies.MOVIE_ID},
                 TMDbContract.Movies.IS_POPULAR + " = ? OR " + TMDbContract.Movies.IS_TOP_RATED + " = ? ", new String[]{"1","1"}, null).getCount();
-        return  numMovies;
 
+        return  numMovies;
     }
 
 
@@ -304,11 +289,7 @@ public class TMDbSyncUtil {
                 ids[i] = movie.getInt(TMDbContract.Movies.MOVIE_ID);
             }
 
-            //TODO Read Uri APIs
-            //TODO declare URI constants in contract
-            Uri uriTMDb = Uri.parse("content://" + TMDbContentProvider.AUTHORITY
-                    + "/" + TMDbContract.Movies.TABLE_NAME);
-            int numInserted = contentResolver.bulkInsert(uriTMDb, contentValues);
+            int numInserted = contentResolver.bulkInsert(TMDbContract.Movies.URI, contentValues);
 
             if (numInserted != resultLength) {
                 Log.e(TAG, "Not all of the result were inserted.\n Amount inserted: " + numInserted
@@ -468,9 +449,7 @@ public class TMDbSyncUtil {
         ContentValues[] contentValues = new ContentValues[contentValuesArrayList.size()];
         contentValues = contentValuesArrayList.toArray(contentValues);
 
-        Uri uriTMDb = Uri.parse("content://" + TMDbContentProvider.AUTHORITY
-                + "/" + TMDbContract.Videos.TABLE_NAME);
-        int numInserted = contentResolver.bulkInsert(uriTMDb, contentValues);
+        int numInserted = contentResolver.bulkInsert(TMDbContract.Videos.URI, contentValues);
 
         if (numInserted != contentValues.length) {
             Log.e(TAG, "Not all of the result were inserted.\n Amount inserted: " + numInserted
@@ -516,9 +495,7 @@ public class TMDbSyncUtil {
         ContentValues[] contentValues = new ContentValues[contentValuesArrayList.size()];
         contentValues = contentValuesArrayList.toArray(contentValues);
 
-        Uri uriTMDb = Uri.parse("content://" + TMDbContentProvider.AUTHORITY
-                + "/" + TMDbContract.Reviews.TABLE_NAME);
-        int numInserted = contentResolver.bulkInsert(uriTMDb, contentValues);
+        int numInserted = contentResolver.bulkInsert(TMDbContract.Reviews.URI, contentValues);
 
         if (numInserted != contentValues.length) {
             Log.e(TAG, "Not all of the result were inserted.\n Amount inserted: " + numInserted

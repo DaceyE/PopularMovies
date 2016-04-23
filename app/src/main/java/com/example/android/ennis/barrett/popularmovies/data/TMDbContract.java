@@ -16,14 +16,18 @@
 package com.example.android.ennis.barrett.popularmovies.data;
 
 import android.content.ContentUris;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.provider.BaseColumns;
+
+import com.example.android.ennis.barrett.popularmovies.R;
 
 /**
  * A contract class for the TMDbContentProvider
  */
 public class TMDbContract {
-    //TODO Include URIs
+
+    public static final String AUTHORITY = "com.example.android.ennis.barrett.popularmovies.data";
 
     public static Uri buildURI(Uri uri, long id){
         return ContentUris.withAppendedId(uri, id);
@@ -32,8 +36,12 @@ public class TMDbContract {
     /**
      * contract class specifically for themmovies table
      */
-    public class Movies implements BaseColumns{
+    public static class Movies implements BaseColumns{
+
         public static final String TABLE_NAME = "themovies";
+        public static final Uri URI = Uri.parse("content://" + AUTHORITY + "/"
+                + TABLE_NAME);
+
         public static final String ID = "_id";
 
         //Maps to the movies API JSON names
@@ -53,8 +61,10 @@ public class TMDbContract {
     /**
      * contract class specifically for thevideos table
      */
-    public class Videos implements BaseColumns{
+    public static class Videos implements BaseColumns{
         public static final String TABLE_NAME = "thevideos";
+        public static final Uri URI = Uri.parse("content://" + AUTHORITY + "/"
+                + TABLE_NAME);
 
         //Most col map to the TMDb JSON object. MOVIE_IDS does not due to a collision
         public static final String ID = "_id";
@@ -73,8 +83,10 @@ public class TMDbContract {
     /**
      * contract class specifically for themreviews table
      */
-    public class Reviews implements BaseColumns{
+    public static class Reviews implements BaseColumns{
         public static final String TABLE_NAME = "thereviews";
+        public static final Uri URI = Uri.parse("content://" + AUTHORITY + "/"
+                + TABLE_NAME);
 
         //Most col map to the TMDb JSON object. MOVIE_IDS does not due to a collision
         public static final String ID = "_id";

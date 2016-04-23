@@ -162,11 +162,8 @@ public class MainFragment extends Fragment implements AdapterView.OnItemClickLis
                     whereArgs = new String[]{"1"};
                 }
 
-                Uri uri = Uri.parse("content://" + TMDbContentProvider.AUTHORITY + "/"
-                        + TMDbContract.Movies.TABLE_NAME);
-                Log.v(TAG, "case 0 chosen \n" + uri.toString());
                 return new CursorLoader(getActivity(),
-                        uri,
+                        TMDbContract.Movies.URI,
                         null,       // projection (col to return)
                         whereClause,// where clause
                         whereArgs,  // where args (values to insert in the ?)

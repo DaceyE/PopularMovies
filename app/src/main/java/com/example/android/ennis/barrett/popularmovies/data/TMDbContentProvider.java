@@ -31,8 +31,7 @@ public class TMDbContentProvider extends ContentProvider {
     private static UriMatcher mUriMatcher;
     private static CustomSQLiteOpenHelper mCustomSQLiteOpenHelper;
 
-    //TODO I think this string is in the wrong place. Should be in contract class
-    public static String AUTHORITY = "com.example.android.ennis.barrett.popularmovies.data";
+
     private static final int MOVIES = 5;
     private static final int VIDEOS = 15;
     private static final int REVIEWS = 25;
@@ -42,9 +41,9 @@ public class TMDbContentProvider extends ContentProvider {
     static {
         //TODO Read up on creating the uri for the *_ROW.  The udacity webcast & other examples don't seem to make sense because they throw out the selection and selectionArgs[] input
         mUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
-        mUriMatcher.addURI(AUTHORITY, TMDbContract.Movies.TABLE_NAME, MOVIES);
-        mUriMatcher.addURI(AUTHORITY, TMDbContract.Videos.TABLE_NAME, VIDEOS);
-        mUriMatcher.addURI(AUTHORITY, TMDbContract.Reviews.TABLE_NAME, REVIEWS);
+        mUriMatcher.addURI(TMDbContract.AUTHORITY, TMDbContract.Movies.TABLE_NAME, MOVIES);
+        mUriMatcher.addURI(TMDbContract.AUTHORITY, TMDbContract.Videos.TABLE_NAME, VIDEOS);
+        mUriMatcher.addURI(TMDbContract.AUTHORITY, TMDbContract.Reviews.TABLE_NAME, REVIEWS);
     }
 
 
