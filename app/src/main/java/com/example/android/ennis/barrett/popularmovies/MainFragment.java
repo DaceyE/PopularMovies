@@ -18,7 +18,6 @@ package com.example.android.ennis.barrett.popularmovies;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -32,7 +31,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
 
-import com.example.android.ennis.barrett.popularmovies.data.TMDbContentProvider;
+import com.example.android.ennis.barrett.popularmovies.adapter.GridAdapter;
 import com.example.android.ennis.barrett.popularmovies.data.TMDbContract;
 
 

@@ -35,7 +35,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
-import com.example.android.ennis.barrett.popularmovies.data.TMDbContentProvider;
+import com.example.android.ennis.barrett.popularmovies.adapter.ReviewCursorAdapter;
+import com.example.android.ennis.barrett.popularmovies.adapter.VideoCursorAdapter;
 import com.example.android.ennis.barrett.popularmovies.data.TMDbContract;
 
 import com.squareup.picasso.Picasso;
