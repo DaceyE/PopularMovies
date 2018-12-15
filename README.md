@@ -1,4 +1,5 @@
-# PopularMovies 
+# PopularMovies <img src="https://github.com/DaceyE/PopularMovies/blob/master/app/src/main/res/mipmap-xxhdpi/ic_launcher.png" height="48px" />
+
 
 ## Instructions
 **A**dd key in build.gradle file (Module: app)
@@ -14,7 +15,8 @@ buildTypes.each { it.buildConfigField 'String', 'TMDb_API_KEY','"YOUR KEY HERE"'
 
 ## Specifications
 **Common Requirements**  
-•  Follow Java style guide, git style guide, [core app quality guide](https://developer.android.com/docs/quality-guidelines/core-app-quality), and [tablet app quality guide](https://developer.android.com/docs/quality-guidelines/tablet-app-quality).
+•  Follow Java style guide, git style guide, [core app quality guide][1], and [tablet app quality guide][2].  
+
 
 **User Interface - Layout**  
 •  Movies are displayed in the main layout via a grid of their corresponding movie poster thumbnails.  
@@ -47,3 +49,8 @@ buildTypes.each { it.buildConfigField 'String', 'TMDb_API_KEY','"YOUR KEY HERE"'
 •  Repo should be merged with the other demo applications for convenience.  
 •  Upload Java style guide used.  
 •  Upload Git style guide used.  
+
+
+
+[1]: https://developer.android.com/docs/quality-guidelines/core-app-quality
+[2]: https://developer.android.com/docs/quality-guidelines/tablet-app-quality
