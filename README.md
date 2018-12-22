@@ -1,5 +1,13 @@
-# PopularMovies <img src="https://github.com/DaceyE/PopularMovies/blob/master/app/src/main/res/mipmap-xxhdpi/ic_launcher.png" height="48px" />
+# Popular Movies <img src="https://github.com/DaceyE/PopularMovies/blob/master/app/src/main/res/mipmap-xxhdpi/ic_launcher.png" height="48px" />
 
+<div>
+  <img height="400" src="https://ennis.000webhostapp.com/portfolio/popular%20movies/zr/Screenshot_2018-12-16-16-36-50.png" />
+  <img height="400" hspace="20"  src="https://ennis.000webhostapp.com/portfolio/popular%20movies/zr/Screenshot_2018-12-16-16-37-34.png" />
+</div>
+&nbsp
+<img height="400" src="https://ennis.000webhostapp.com/portfolio/popular%20movies/kf/Screenshot_2018-12-16-15-00-48.png" />
+
+**S**ee the bottom of this readme for more images.
 
 ## Instructions
 **A**dd key in build.gradle file (Module: app)
@@ -50,6 +58,38 @@ buildTypes.each { it.buildConfigField 'String', 'TMDb_API_KEY','"YOUR KEY HERE"'
 •  Upload Java style guide used.  
 •  Upload Git style guide used.  
 
+
+## Images
+**S**creenshots are from a API 16 ZTE Reef and a 7th generation Kindle Fire because device diversity is important.
+
+<div>
+  <img height="240" src="https://ennis.000webhostapp.com/portfolio/popular%20movies/zr/Screenshot_2018-12-16-16-57-05.png" />
+  <img height="240" hspace="20"  src="https://ennis.000webhostapp.com/portfolio/popular%20movies/zr/Screenshot_2018-12-16-16-57-29.png" />
+</div>
+&nbsp
+<div>
+  <img height="400" src="https://ennis.000webhostapp.com/portfolio/popular%20movies/zr/Screenshot_2018-12-16-16-38-24.png" />
+  <img height="400" hspace="20"  src="https://ennis.000webhostapp.com/portfolio/popular%20movies/zr/Screenshot_2018-12-16-16-38-35.png" />
+</div>
+&nbsp
+
+<div>
+  <img height="640" src="https://ennis.000webhostapp.com/portfolio/popular%20movies/kf/Screenshot_2018-12-16-15-11-48.png" />
+  <img height="400" hspace="20"  src="https://ennis.000webhostapp.com/portfolio/popular%20movies/zr/Screenshot_2018-12-16-16-38-51.png" />
+</div>
+&nbsp
+
+<div>
+  <img height="640" src="https://ennis.000webhostapp.com/portfolio/popular%20movies/kf/Screenshot_2018-12-16-15-12-37.png" />
+  <img height="640" hspace="20" src="https://ennis.000webhostapp.com/portfolio/popular%20movies/kf/Screenshot_2018-12-16-15-13-32.png" />
+</div>
+&nbsp
+
+<div>
+   <img height="400"  src="https://ennis.000webhostapp.com/portfolio/popular%20movies/zr/Screenshot_2018-12-16-16-40-38.png"  />
+   <img height="400" hspace="20"  src="https://ennis.000webhostapp.com/portfolio/popular%20movies/zr/Screenshot_2018-12-16-16-52-34.png"  />
+</div>
+ 
 
 
 [1]: https://developer.android.com/docs/quality-guidelines/core-app-quality
